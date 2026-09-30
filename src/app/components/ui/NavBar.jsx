@@ -246,20 +246,26 @@ export default function NavBar() {
               
             <div key={favorite.id} className='w-full  flex items-center justify-between gap-5 p-4  border-[1px] border-border rounded-xl bg-background   '>
             {/*image*/}
-              <Link href='#' className='max-w-60 h-full flex  justify-start sm:pr-10 items-center z-10 overflow-hidden'>
+            <SheetClose asChild>
+              <Link href={`/product/${favorite.id}`} className='max-w-60 h-full flex  justify-start sm:pr-10 items-center z-10 overflow-hidden'>
                 <Image src={favorite.img} alt={favorite.name} className='object-cover  w-30 sm:w-40 h-auto hover:scale-110  transition-all duration-200 
                 
                 '/>
               </Link>
+              </SheetClose>
              
             <div className=" flex justify-center items-center gap-5 flex-1 ">
 
             
              {/*name*/}
+             <SheetClose asChild>
+             <Link href={`/product/${favorite.id}`}>
               <div className=' max-w-[500px] flex justify-center items-center flex-col flex-1 '>
                 <h2 className='text-sm sm:text-xl  font-bold font-alexandria text-primary-hover line-clamp-2'>{favorite.name}</h2>
                 <p className='text-start text-text-muted text-sm lg:text-lg line-clamp-2'>{favorite.description}</p>
              </div>
+             </Link>
+             </SheetClose>
             {/*price*/}
               <div >
               <h2 className='text-primary p-2 text-xl sm:text-3xl font-extrabold line-clamp-1'>{favorite.price}دج</h2>
