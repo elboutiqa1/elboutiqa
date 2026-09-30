@@ -25,7 +25,7 @@ export default function ProductsSection({title="المنتجات",search="",cate
             <div className="w-full text-center flex justify-center items-center flex-col gap-2 lg:gap-3">
 
             <div className="relative flex justify-center items-center  ">
-             <h1 className="text-3xl lg:text-4xl font-extrabold font-alexandria text-primary ">{title}</h1>
+             <h1 className="text-2xl lg:text-4xl font-extrabold font-alexandria text-primary ">{title}</h1>
               {title!=="المنتجات" && <span className="absolute -left-14 p-3 h-10 w-10 bg-primary rounded-full text-background text-xl font-bold flex items-center justify-center">{filteredProducts.length}</span>}
                 </div>
 
@@ -39,7 +39,7 @@ export default function ProductsSection({title="المنتجات",search="",cate
            
             ">
                {title==='المنتجات' && <Link href="/product" className="flex items-center gap-2 absolute left-5 hover:text-primary transition-all duration-200 -top-10 z-30 font-bold text-sm sm:text-xl text-primary  ">عرض الجميع <MoveLeft strokeWidth={3}/></Link>}
-                {title!=="المنتجات" && <Link href="/" className="flex items-center gap-2 absolute left-5 hover:text-primary transition-all duration-200 -top-10 z-30 font-bold text-sm sm:text-xl text-primary  ">العودة<MoveLeft strokeWidth={3}/></Link>}
+                {title!=="المنتجات" && <Link href="/" className="flex items-center gap-2 mt-2 absolute left-5 hover:text-primary transition-all duration-200 -top-10 z-30 font-bold text-sm sm:text-xl text-primary  ">العودة<MoveLeft strokeWidth={3}/></Link>}
               {filteredProducts.map((product) => (
                 <ProductCard
                 key={product.id}
