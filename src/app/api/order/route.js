@@ -20,19 +20,13 @@ export async function POST(request) {
 
     const token =
       process.env.TELEGRAM_BOT_TOKEN ||
-      process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN ||
       process.env.API_KEY ||
-      process.env.NEXT_PUBLIC_API_KEY ||
-      process.env.VITE_API_KEY ||
-      process.env.NEXT_PUBLIC_VITE_API_KEY;
+      process.env.VITE_API_KEY;
 
     const chatId =
       process.env.TELEGRAM_CHAT_ID ||
-      process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID ||
       process.env.CHAT_ID ||
-      process.env.NEXT_PUBLIC_CHAT_ID ||
-      process.env.VITE_CHAT_ID ||
-      process.env.NEXT_PUBLIC_VITE_CHAT_ID;
+      process.env.VITE_CHAT_ID;
 
     if (!token || !chatId) {
       console.error("❌ Telegram tokens are missing in environment variables!");

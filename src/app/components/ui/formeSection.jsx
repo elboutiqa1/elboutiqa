@@ -21,16 +21,6 @@ import { useShop } from "@/Context/ShopContext";
 import deliveryRatesData from '@/app/assets/tarifs_livraison_ecom_delivery.json';
 import communesData from '@/app/assets/communes.json';
 
-const TELEGRAM_BOT_TOKEN = 
-  process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN || 
-  process.env.NEXT_PUBLIC_API_KEY || 
-  process.env.NEXT_PUBLIC_VITE_API_KEY;
-
-const TELEGRAM_CHAT_ID = 
-  process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID || 
-  process.env.NEXT_PUBLIC_CHAT_ID || 
-  process.env.NEXT_PUBLIC_VITE_CHAT_ID;
-
 const WILAYA_AR_NAMES = {
   1: 'أدرار',
   2: 'الشلف',
