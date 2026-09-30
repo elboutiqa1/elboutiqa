@@ -27,20 +27,9 @@ export default function NavBar() {
     const[search,setSearch]=useState("")
     const {addToCart,toggleFavorite, favorites,cart,removeFavorite,removeFromCart ,decreaseQuantity,getItemQuantity} = useShop();
     const [quantity,setQuantity] = useState(1);
-    const [totalPrice,setTotalPrice] =useState(0);
-
-useEffect(() => {
-
-  if (!cart || cart.length === 0) {
-    setTotalPrice(0);
-    return;
-  }
-
-  const total = cart.reduce((acc, item) => {
-    return acc + (item.price * getItemQuantity(item.id));
-  }, 0);
-  setTotalPrice(total);
-}, [cart]);
+    const totalPrice = cart?.reduce((acc, item) => {
+      return acc + (item.price * getItemQuantity(item.id));
+    }, 0) || 0;
     
 
     const totalItemsCount = cart.reduce((total, item) => {
@@ -170,7 +159,7 @@ useEffect(() => {
             elboutiqa
             </h1>
             <div className="h-[36px] w-[2px] rounded-full bg-primary/70"></div>
-            <Image src={logo} priority alt="elboutiqa" className='w-10 h-10 md:w-15 md:h-15 max-[400px]:w-8 max-[400px]:h-8' />
+            <Image src={logo} priority alt="" className='w-10 h-10 md:w-15 md:h-15 max-[400px]:w-8 max-[400px]:h-8' />
             
         </Link>
 
@@ -186,7 +175,7 @@ useEffect(() => {
          {/*search*/}
           <Sheet>
           {/*open search button*/}
-          <SheetTrigger>
+          <SheetTrigger aria-label="البحث عن منتج">
           <div  className=" bg-background p-3 rounded-4xl text-primary-hover
           hover:text-primary border-2 border-border hover:border-primary active:text-primary active:border-primary transition-all duration-200 cursor-pointer 
           ">
@@ -199,7 +188,7 @@ useEffect(() => {
         <h1 className='text-primary font-alexandria text-3xl font-bold w-full text-center'>البحث عن منتج</h1>
 
         <div className='w-full h-full flex items-center justify-center mt-20 gap-2 sm:gap-5 '>
-         <input value={search} onChange={(e)=>setSearch(e.target.value)} type="text" placeholder='أدخل إسم المنتج...' className='w-[250px] sm:w-[400px] h-[50px] text-md font-bold p-5 rounded-full border border-primary-hover focus:border-primary active:border-primary transition-all duration-200 ' />
+         <input value={search} onChange={(e)=>setSearch(e.target.value)} type="text" placeholder='أدخل إسم المنتج...' aria-label="أدخل إسم المنتج" className='w-[250px] sm:w-[400px] h-[50px] text-md font-bold p-5 rounded-full border border-primary-hover focus:border-primary active:border-primary transition-all duration-200 ' />
          <SheetClose asChild>
          <Link href={`/search?search=${search}`} className='flex items-center justify-center w-[80px] sm:w-[100px] h-[50px] rounded-full bg-primary text-background font-bold hover:bg-primary-hover active:bg-primary-hover transition-all duration-200 cursor-pointer'>بحث</Link>
          </SheetClose>
@@ -220,7 +209,7 @@ useEffect(() => {
          {/*favorite*/}
           <Sheet >
           {/*open favorite button*/}
-          <SheetTrigger>
+          <SheetTrigger aria-label="عرض قائمة المفضلة">
           <div className="group bg-background p-3 rounded-4xl text-primary-hover
           hover:text-red border-2 border-border hover:border-red active:text-red active:border-red transition-all duration-200 cursor-pointer 
            ">
@@ -329,7 +318,7 @@ useEffect(() => {
           {/*cart*/}
          <Sheet>
           {/*open cart button*/}
-          <SheetTrigger>
+          <SheetTrigger aria-label="عرض سلة التسوق">
           <div className='flex items-center justify-center gap-2 bg-primary-hover p-4 sm:py-3 sm:px-4 rounded-4xl text-background
           hover:bg-primary active:bg-primary active:text-background transition-all duration-200 cursor-pointer
           '>
@@ -406,8 +395,11 @@ useEffect(() => {
 
               {/*buttons*/}
               <div className='h-full flex flex-col items-center justify-center gap-2 sm:gap-3 '>
-               {/*add to cart button*/}
-        <div className="absolute top-0 left-0 flex items-center justify-center gap-1 sm:gap-2  p-3 rounded-4xl 
+               {/*remove from cart button*/}
+        <button
+          type="button"
+          aria-label={`إزالة ${product.name} من السلة`}
+          className="absolute top-0 left-0 flex items-center justify-center gap-1 sm:gap-2  p-3 rounded-4xl 
           transition-all duration-200 cursor-pointer
            text-primary-hover hover:text-primary  "
           onClick={() => {
@@ -417,14 +409,14 @@ useEffect(() => {
             }>
 
             <ShoppingCartMinus className='size-6 ' />
-          </div> 
+          </button> 
 
 
               {/*quantity*/}
               <div className="absolute bottom-1 left-2 flex w-[80px]  items-center justify-center gap-2 border-2  border-border bg-background rounded-3xl">
-                <button className='p-1 text-primary-hover  flex  items-center justify-center' onClick={()=>addToCart(product)}>+</button>
+                <button type="button" aria-label="زيادة الكمية" className='p-1 text-primary-hover  flex  items-center justify-center cursor-pointer' onClick={()=>addToCart(product)}>+</button>
                 <span className='text-primary-hover text-md sm:text-lg font-extrabold line-clamp-1'>{getItemQuantity(product.id)}</span>
-                <button className='p-1 text-primary-hover flex  items-center justify-center' onClick={()=>decreaseQuantity(product)}>-</button>
+                <button type="button" aria-label="تقليل الكمية" className='p-1 text-primary-hover flex  items-center justify-center cursor-pointer' onClick={()=>decreaseQuantity(product)}>-</button>
               </div>
               </div>
 
@@ -509,7 +501,7 @@ useEffect(() => {
          {/*menu*/}
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
           {/*open menu button*/}
-          <SheetTrigger>
+          <SheetTrigger aria-label="فتح القائمة الرئيسية">
           <div className=" bg-background p-3 rounded-4xl text-primary-hover 
           hover:text-primary border-2 border-border hover:border-primary active:text-primary active:border-primary transition-all duration-200 cursor-pointer 
            block lg:hidden">
@@ -535,9 +527,9 @@ useEffect(() => {
           <div className='flex items-center justify-center gap-4 mb-5 bg-primary-hover rounded-full p-3 w-fit mx-auto
           border-[1px] border-border 
           '>
-            <Link href={"https://www.facebook.com/elboutiqa"} className='bg-background p-1.5 rounded-full border-[1px] border-border btn-hover btn-active'> <FaFacebook className='size-9 text-facebook active:text-facebook-hover '/> </Link>
-            <Link href={"https://www.instagram.com/el_boutiqa"} className='bg-background p-1.5 rounded-full border-[1px] border-border btn-hover btn-active'> <FaInstagram className='size-9 text-instagram active:text-instagram-hover '/> </Link>
-            <Link href={"https://wa.me/213660184286"} className='bg-background p-1.5 rounded-full border-[1px] border-border btn-hover btn-active'> <FaWhatsapp className='size-9 text-whatsapp active:text-whatsapp-hover '/> </Link>
+            <Link href={"https://www.facebook.com/elboutiqa"} aria-label="صفحة فيسبوك" className='bg-background p-1.5 rounded-full border-[1px] border-border btn-hover btn-active'> <FaFacebook className='size-9 text-facebook active:text-facebook-hover '/> </Link>
+            <Link href={"https://www.instagram.com/el_boutiqa"} aria-label="صفحة انستغرام" className='bg-background p-1.5 rounded-full border-[1px] border-border btn-hover btn-active'> <FaInstagram className='size-9 text-instagram active:text-instagram-hover '/> </Link>
+            <Link href={"https://wa.me/213660184286"} aria-label="تواصل عبر واتساب" className='bg-background p-1.5 rounded-full border-[1px] border-border btn-hover btn-active'> <FaWhatsapp className='size-9 text-whatsapp active:text-whatsapp-hover '/> </Link>
           </div>
 
     </div>

@@ -10,9 +10,8 @@ export default function ShowProductPage() {
   const product = getProductById(slug);
 
   return (
-    <main className="min-h-screen mt-[90px] w-full bg-background">
-      
+    <div className="min-h-screen mt-[90px] w-full bg-background">
       <ShowProduct product={product} />
-    </main>
+    </div>
   );
 }

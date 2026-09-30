@@ -62,7 +62,10 @@ export default function ProductCard({id,name,description,price,oldPrice=0,quanti
 
         <div className="w-fit flex items-center justify-center gap-1 sm:gap-2 ">
         {/*favorite button*/}
-         <div className={` bg-background p-2 sm:p-3 rounded-4xl text-primary-hover
+         <button
+             type="button"
+             aria-label={isFavorite ? `إزالة ${name} من المفضلة` : `إضافة ${name} إلى المفضلة`}
+             className={` bg-background p-2 sm:p-3 rounded-4xl text-primary-hover
              hover:text-red border-2 border-border hover:border-red active:text-red active:border-red transition-all 
              duration-200 cursor-pointer ${isFavorite ? "text-red border-red " : " text-primary-hover border-border"} `}
              onClick={() => {
@@ -72,10 +75,13 @@ export default function ProductCard({id,name,description,price,oldPrice=0,quanti
                 toggleFavorite(product); toast.success("تمت إضافة المنتج إلى المفضلة")  
               }}}>
             <Heart strokeWidth={3} className={`size-4 sm:size-6  ${isFavorite ? "fill-red" : ""}`}/>
-          </div> 
+          </button> 
 
         {/*add to cart button*/}
-        <div className={`flex items-center justify-center gap-1 sm:gap-2  p-3 rounded-4xl 
+        <button
+          type="button"
+          aria-label={isCart ? `إزالة ${name} من السلة` : `إضافة ${name} إلى السلة`}
+          className={`flex items-center justify-center gap-1 sm:gap-2  p-3 rounded-4xl 
           transition-all duration-200 cursor-pointer
           ${isCart ? "bg-background text-primary-hover hover:text-primary hover:bg-background" : "bg-primary-hover text-background  hover:bg-primary active:bg-primary active:text-background"} `}
           onClick={() => {
@@ -88,7 +94,7 @@ export default function ProductCard({id,name,description,price,oldPrice=0,quanti
             }}>
 
             <ShoppingCart className='size-4 sm:size-6' />
-          </div> 
+          </button> 
         </div>
         </div>
 

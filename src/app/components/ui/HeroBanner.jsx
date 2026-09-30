@@ -95,14 +95,15 @@ export default function HeroBanner() {
             <div className="relative w-full flex flex-col justify-center items-center text-center">
               <Image
                 src={slide.Img}
-                alt="banner"
+                alt={`عرض خاص ${slide.name}`}
                 priority={index === 0}
                 className="w-full h-auto block "
               />
               <Link
                 href={`/product/${slide.name}`}
+                aria-label={`أطلبه الآن - عرض ${slide.name}`}
                 className="w-[100px] md:w-[150px] h-[40px] md:h-[50px] py-3 px-5 bg-primary hover:bg-primary-hover
-                 flex justify-center items-center rounded-full text-xs md:text-lg font-bold text-background absolute bottom-4 md:bottom-7 left-1/2 -translate-x-1/2 border-2 border-background opacity-60 transition-all duration-200 cursor-pointer shadow-md"
+                 flex justify-center items-center rounded-full text-xs md:text-lg font-bold text-background absolute bottom-4 md:bottom-7 left-1/2 -translate-x-1/2 border-2 border-background transition-all duration-200 cursor-pointer shadow-md"
               >
                 أطلبه الآن
               </Link>
@@ -110,9 +111,9 @@ export default function HeroBanner() {
           </SwiperSlide>
         ))}
       </Swiper>
-      {/* Custem buttons*/}
-        <div className="swiper-button-prev  !text-background !w-10 !h-10 !p-3 bg-primary-hover hover:bg-primary rounded-full border border-background opacity-60 after:!text-xl  transition-opacity duration-200" />
-        <div className="swiper-button-next !text-background !w-10 !h-10 !p-3 bg-primary-hover hover:bg-primary rounded-full border border-background opacity-60 after:!text-xl   transition-opacity duration-200" />
+      {/* Custom buttons*/}
+        <button type="button" aria-label="الشريحة السابقة" className="swiper-button-prev !text-background !w-10 !h-10 !p-3 bg-primary-hover hover:bg-primary rounded-full border border-background after:!text-xl transition-opacity duration-200 cursor-pointer" />
+        <button type="button" aria-label="الشريحة التالية" className="swiper-button-next !text-background !w-10 !h-10 !p-3 bg-primary-hover hover:bg-primary rounded-full border border-background after:!text-xl transition-opacity duration-200 cursor-pointer" />
 
 
     </div>

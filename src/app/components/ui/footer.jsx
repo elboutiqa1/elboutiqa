@@ -69,7 +69,7 @@ export default function Footer() {
           {/* Store */}
           <div className="text-center md:text-right flex flex-col items-center">
         <div className="flex items-center gap-1.5">
-             <Image src={logo}  alt="elboutiqa" className="w-10 h-10 " />
+             <Image src={logo}  alt="" className="w-10 h-10 " />
             <Link
               href="/"
               onClick={(e) => scrollToSection(e, "/")}

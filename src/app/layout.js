@@ -34,13 +34,13 @@ const inter = localFont({
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://elboutiqa.com"),
   title: {
-    default: "البوتيقة | Elboutiqa - متجرك الإلكتروني في الجزائر",
-    template: "%s | البوتيقة",
+    default: "البوتيكة | Elboutiqa - متجرك الإلكتروني في الجزائر",
+    template: "%s | البوتيكة",
   },
   description:
-    "متجر البوتيقة الإلكتروني في الجزائر. تسوق أفضل المنتجات، الإلكترونيات، والأجهزة الكهرومنزلية بأفضل الأسعار مع توصيل سريع لـ 58 ولاية والدفع عند الاستلام.",
+    "متجر البوتيكة الإلكتروني في الجزائر. تسوق أفضل المنتجات، الإلكترونيات، والأجهزة الكهرومنزلية بأفضل الأسعار مع توصيل سريع لـ 58 ولاية والدفع عند الاستلام.",
   keywords: [
-    "البوتيقة",
+    "البوتيكة",
     "elboutiqa",
     "متجر إلكتروني الجزائر",
     "تسوق أونلاين",
@@ -70,13 +70,13 @@ export const metadata = {
     type: "website",
     locale: "ar_DZ",
     siteName: "Elboutiqa",
-    title: "البوتيقة | Elboutiqa - متجرك الإلكتروني في الجزائر",
+    title: "البوتيكة | Elboutiqa - متجرك الإلكتروني في الجزائر",
     description:
       "تسوق أفضل المنتجات والإلكترونيات بأفضل الأسعار مع توصيل سريع لـ 58 ولاية والدفع عند الاستلام.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "البوتيقة | Elboutiqa",
+    title: "البوتيكة | Elboutiqa",
     description:
       "تسوق أفضل المنتجات والإلكترونيات بأفضل الأسعار مع توصيل سريع لجميع الولايات والدفع عند الاستلام.",
   },
@@ -86,18 +86,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ar" dir="rtl" className={`${cairo.variable} ${alexandria.variable} ${inter.variable}`}>
       <body className="min-h-full font-cairo">
-      <ShopProvider>
-
-       
-
-        <NavBar />
-        {children}
-        <Footer />
-        <Toaster />
-        
-
-      </ShopProvider>
-        </body>
+        <ShopProvider>
+          <NavBar />
+          <main id="main-content">
+            {children}
+          </main>
+          <Footer />
+          <Toaster />
+        </ShopProvider>
+      </body>
     </html>
   );
 }
