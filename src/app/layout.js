@@ -32,6 +32,7 @@ const inter = localFont({
 
 
 export const metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://elboutiqa.com"),
   title: {
     default: "البوتيقة | Elboutiqa - متجرك الإلكتروني في الجزائر",
     template: "%s | البوتيقة",
@@ -50,6 +51,21 @@ export const metadata = {
   ],
   authors: [{ name: "Elboutiqa" }],
   creator: "Elboutiqa",
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     locale: "ar_DZ",
