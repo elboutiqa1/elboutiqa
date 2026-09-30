@@ -9,24 +9,25 @@ import Footer from "./components/ui/footer"
 const cairo = localFont({
   src: './assets/fonts/Cairo-VariableFont_slnt,wght.ttf',
   variable: '--font-cairo',
-  style: 'normal', // 
+  style: 'normal',
   display: 'swap',
+  preload: false,
 });
-
 
 const alexandria = localFont({
   src: './assets/fonts/Alexandria-VariableFont_wght.ttf',
   variable: '--font-alexandria',
   style: 'normal',
   display: 'swap',
+  preload: false,
 });
-
 
 const inter = localFont({
   src: './assets/fonts/Inter-VariableFont_opsz,wght.ttf',
   variable: '--font-inter',
   style: 'normal',
   display: 'swap',
+  preload: false,
 });
 
 
