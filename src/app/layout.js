@@ -85,7 +85,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="ar" dir="rtl" className={`${cairo.variable} ${alexandria.variable} ${inter.variable}`}>
+    <html
+      lang="ar"
+      dir="rtl"
+      data-scroll-behavior="smooth"
+      className={`${cairo.variable} ${alexandria.variable} ${inter.variable}`}
+    >
       <body className="min-h-full font-cairo">
         <ShopProvider>
           <NavBar />

@@ -26,11 +26,11 @@ import Product from "@/app/product/page";
 
 const SLIDES = [
   {
-   name:'6in1',
+   name:'4',
    Img:Img1 
   },
   { 
-  name:'11in1',
+  name:'3',
    Img:Img2 
   },
  

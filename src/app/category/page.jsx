@@ -6,7 +6,7 @@ export default async function categorySection({searchParams} ) {
     const params = await searchParams;
     const category = params.category;
     
-    console.log(category)
+  
     return (
         <div className="mt-20 ">
             <Category className="!border-none "/>

@@ -1,160 +1,108 @@
-import img1 from "@/app/assets/products/1.jpg";
-import img2 from "@/app/assets/products/2.jpg";
-import img3 from "@/app/assets/products/3.jpg";
-import img4 from "@/app/assets/products/4.jpg";
-import img5 from "@/app/assets/products/5.jpg";
-import img6 from "@/app/assets/products/6.jpg";
-import img7 from "@/app/assets/products/7.jpg";
-import img8 from "@/app/assets/products/8.webp";
+
+
+import e1 from "@/app/assets/products/e1.png"
+import e2 from "@/app/assets/products/e2.png"
+import e3 from "@/app/assets/products/e3.png"
+import e4 from "@/app/assets/products/e4.jpeg"
+
+
+import w1 from "@/app/assets/products/w1.jpeg"
+import w2 from "@/app/assets/products/w2.jpeg"
+import w3 from "@/app/assets/products/w3.jpeg"
+
+
+import h11 from "@/app/assets/products/h11.png"
+import h6 from "@/app/assets/products/h6.png"
 
 export const productsItems = [
   {
     id: 1,
-    name: "Adaptateur HDMI , RJ45, USB 3.0, SD/TF",
-    description: "Docking Station USB Hub متعدد الوظائف ✨ كلشي فـ Hub واحد لتحسين تجربة جهازك! HDMI Input، منفذ RJ45 (100Mb) للأنترنت الثابت، قارئ بطاقات SD/TF، و 2 منافذ Type-C. مثالي للـ Laptop، PC، وحتى بعض الهواتف. عملي فالدار، الخدمة، ولا حتى في السفر.",
-    price: 25000,
-    oldPrice: 29000,
-    img: img1,
-    images: [img1, img2, img4, img8],
-    rating: 4.9,
-    reviewsCount: 38,
-    category: "Hub",
+    name: "Imprimante Ticket de Caisse Thermique Xprinter XP-C260M – USB + LAN",
+    description: "طابعة التذاكر الحرارية Xprinter XP-C260M، حل عملي وفعال لطباعة تذاكر البيع، الفواتير والطلبات بسرعة وجودة واضحة. مناسبة للمحلات، المطاعم، المقاهي ومختلف نقاط البيع.",
+    price: 15900,
+    oldPrice: 0,
+    img: e4,
+    images: [e1, e2, e3, e4],
+    category: "Electronique",
     inStock: true,
     features: [
-      "منفذ HDMI يدعم 4K عالي الدقة",
-      "منفذ RJ45 سريع للاتصال المستقر بالإنترنت",
-      "قارئ بطاقات ذاكرة SD و TF فائق السرعة",
-      "تصميم من الألمنيوم المتين لتبديد الحرارة بسرعة",
-      "متوافق مع MacBook، Windows والأجهزة اللوحية"
+      "طباعة حرارية مباشرة بدون حبر",
+      "سرعة طباعة عالية",
+      "تدعم ورق حراري بعرض 80 مم",
+      "الاتصال عبر USB",
+      "الاتصال عبر LAN / Ethernet",
+      "منفذ خاص بـ Cash Drawer",
+      "قاطع تلقائي للورق",
+      "دعم طباعة الباركود وQR Code",
+      "مناسبة لأنظمة نقاط البيع والفوترة",
+      "تنبيه صوتي أثناء التشغيل والطباعة",
+      "مناسبة للاستعمال في المحلات والمطاعم والمقاهي"
     ]
   },
   {
     id: 2,
-    name: "Adaptateur 8in2 - SD Card",
-    description: "Un seul adaptateur pour tout connecter ! Ce hub 8-en-1 vous permet d’ajouter ports USB 3.0, 2.0, lecteur carte SD/TF, audio jack 3.5mm et USB-C. تصميم أنيق وفعّال بزاف وعملي للغاية لجميع الأجهزة الحديثة.",
-    price: 1200,
-    oldPrice: 1600,
-    img: img2,
-    images: [img2, img1, img4],
-    rating: 4.8,
-    reviewsCount: 24,
+    name: "Air Mouse Télécommande avec Clavier QWERTY Intégré",
+    description:  "ريموت كنترول ذكي مع لوحة مفاتيح QWERTY مدمجة، يجمع بين وظائف جهاز التحكم عن بعد ولوحة المفاتيح في جهاز واحد، لتسهيل التحكم في التلفاز الذكي، أجهزة Android TV وTV Box والأجهزة المتوافقة.",
+    price: 1900,
+    oldPrice: 0,
+    img: w1,
+    images: [w1, w2, w3],
     category: "Electronique",
     inStock: true,
     features: [
-      "8 منافذ متعددة في جهاز صغير ومحمول",
-      "منفذ صوت 3.5mm Aux للسماعات الخارجية",
-      "نقل بيانات عالي السرعة حتى 5Gbps عبر USB 3.0",
-      "هيكل معدني أنيق ومقاوم للصدمات"
+      "جهاز تحكم عن بعد عملي وسهل الاستخدام",
+      "لوحة مفاتيح QWERTY مدمجة",
+      "وظيفة Air Mouse للتحكم بالمؤشر",
+      "أزرار مخصصة للتحكم في الوسائط",
+      "أزرار للتنقل والتحكم داخل القوائم",
+      "مناسب لأجهزة Smart TV وAndroid TV وTV Box المتوافقة",
+      "تصميم مدمج ومريح للاستعمال اليومي"
     ]
   },
   {
     id: 3,
-    name: "مُبرّد الهاتف المحمول K20",
-    description: "حل عملي لتبريد هاتفك المحمول مع مُبرّد K20 الفعّال بتقنية التبريد شبه الموصل مع إضاءة RGB أنيقة، يحافظ على برودة الجهاز أثناء اللعب المكثف.",
-    price: 2500,
-    oldPrice: 3200,
-    img: img3,
-    images: [img3, img5, img6],
-    rating: 4.7,
-    reviewsCount: 19,
-    category: "gaming",
+    name: "Adaptateur + Hub USB-C 11-en-1",
+    description: "محول USB-C متعدد الوظائف TC429، يوفر لك مجموعة من المنافذ في جهاز واحد، ويسمح بتوسيع إمكانيات الحاسوب المحمول أو الجهاز المتوافق مع USB-C بسهولة.",
+    price: 7400,
+    oldPrice: 0,
+    img: h11,
+    images: [h11],
+    category: "Hub",
     inStock: true,
     features: [
-      "تبريد فوري خلال ثوانٍ معدودة",
-      "إضاءة RGB ديناميكية مذهلة",
-      "صوت هادئ جداً بدون أي تشويش",
-      "مشبك تثبيت سيليكوني آمن لا يخدش الهاتف"
+      "3 منافذ USB 3.2 بسرعة تصل إلى 10Gbps",
+      "منفذ HDMI 4K@60Hz",
+      "منفذ DisplayPort",
+      "منفذ VGA",
+      "منفذ RJ45 Gigabit Ethernet 1000Mbps",
+      "قارئ بطاقات SD",
+      "قارئ بطاقات TF / microSD",
+      "منفذ USB-C Power Delivery حتى 100W",
+      "منفذ Audio 3.5mm",
+      "منفذ USB-C Data",
+      "تصميم عملي ومناسب للعمل والدراسة والاستعمال الاحترافي",
+      "التوافق: أجهزة الكمبيوتر المحمولة والأجهزة اللوحية وغيرها من الأجهزة التي تدعم USB-C مع الوظائف المطلوبة"
     ]
   },
   {
     id: 4,
-    name: "Adaptateur HDMI , RJ45, USB 3.0, SD/TF Pro",
-    description: "Docking Station USB Hub متعدد الوظائف فائق الأداء. كل ما تحتاجه في قطعة واحدة لتحسين تجربة جهازك سواء للعمل أو الترفيه.",
-    price: 2500,
-    oldPrice: 3500,
-    img: img4,
-    images: [img4, img1, img2],
-    rating: 4.9,
-    reviewsCount: 52,
-    category: "hub",
-    inStock: true,
-    features: [
-      "دعم الشحن السريع PD بقوة تصل إلى 100W",
-      "مخرج HDMI بدقة 4K@60Hz",
-      "منافذ USB 3.0 متعددة",
-      "حماية مدمجة ضد ارتفاع الجهد والحرارة"
-    ]
-  },
-  {
-    id: 5,
-    name: "مُبرّد الهاتف المحمول K20 gaming Edition",
-    description: "حل عملي واحترافي لتبريد هاتفك المحمول مع مُبرّد K20 بإصدار خاص للاعبين، قوة مضاعفة وثبات ممتاز.",
-    price: 2500,
+    name: "Adaptateur + Hub USB-C 6-en-1",
+    description: "محول USB-C متعدد الوظائف TC428، يوفر لك 6 منافذ في جهاز واحد لتوسيع إمكانيات الحاسوب المحمول والأجهزة المتوافقة مع USB-C.",
+    price: 5200,
     oldPrice: 0,
-    img: img5,
-    images: [img5, img3, img6],
-    rating: 4.8,
-    reviewsCount: 15,
-    category: "Electronique",
+    img: h6,
+    images: [h6],
+    category: "Hub",
     inStock: true,
     features: [
-      "مروحة تيربو قوية وسريعة الدوران",
-      "شاشة رقمية لعرض درجة حرارة المعالج",
-      "وزن خفيف وتصميم مريح لليدين"
-    ]
-  },
-  {
-    id: 6,
-    name: "مُبرّد الهاتف المحمول K20 Ice Master",
-    description: "حافظ على أعلى فريمات وأداء مستقر لهاتفك في ألعابك المفضلة بفضل نظام التبريد المزدوج المتطور.",
-    price: 2500,
-    oldPrice: 3500,
-    img: img6,
-    images: [img6, img7, img3],
-    rating: 4.9,
-    reviewsCount: 41,
-    category: "gaming",
-    inStock: true,
-    features: [
-      "لوحة تبريد عريضة تغطي مساحة أكبر من ظهر الهاتف",
-      "كفاءة عالية تمنع تقطيع الألعاب وهبوط الإطارات",
-      "مناسب لجميع مقاسات الهواتف الذكية"
-    ]
-  },
-  {
-    id: 7,
-    name: "مُبرّد الهاتف المحمول K20 Silent Fan",
-    description: "تبريد قوي بصمت تام وتصميم عصري متوافق مع كافة الهواتف الذكية بنظامي Android و iOS.",
-    price: 2500,
-    oldPrice: 3000,
-    img: img7,
-    images: [img7, img5, img6],
-    rating: 4.6,
-    reviewsCount: 22,
-    category: "Electronique",
-    inStock: true,
-    features: [
-      "تشغيل فائق الهدوء",
-      "بطارية مدمجة قابلة لإعادة الشحن عبر Type-C",
-      "إضاءة ليد زرقاء مريحة للعين"
-    ]
-  },
-  {
-    id: 8,
-    name: "Adaptateur Multi-Hub USB 3.0 Ultra",
-    description: "Docking Station USB Hub متعدد الوظائف خفيف الوزن وعالي الجودة، يسهل حمله في أي حقيبة.",
-    price: 2500,
-    oldPrice: 3500,
-    img: img8,
-    images: [img8, img1, img4],
-    rating: 4.8,
-    reviewsCount: 30,
-    category: "Electronique",
-    inStock: true,
-    features: [
-      "منافذ USB فائقة السرعة",
-      "حجم مدمج ومناسب للسفر والعمل المتنقل",
-      "توصيل فوري Plug & Play بدون تعريفات"
+      "3 منافذ USB 3.2 لنقل البيانات بسرعة عالية",
+      "منفذ HDMI واحد يدعم دقة تصل إلى 4K@60Hz",
+      "منفذ RJ45 Gigabit Ethernet بسرعة تصل إلى 1000Mbps",
+      "منفذ USB-C PD للشحن",
+      "اتصال عبر USB-C",
+      "تصميم مدمج وخفيف وسهل الحمل",
+      "مناسب للعمل، الدراسة والاستعمال اليومي",
+      "التوافق: أجهزة الكمبيوتر المحمولة والأجهزة اللوحية وغيرها من الأجهزة التي تدعم USB-C والوظائف المطلوبة"
     ]
   }
 ];

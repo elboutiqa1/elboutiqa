@@ -235,7 +235,7 @@ export default function ShowProduct({ product: initialProduct }) {
               <span className="text-3xl sm:text-4xl font-extrabold font-alexandria text-primary">
                 {product.price} دج
               </span>
-              {product.oldPrice && product.oldPrice > product.price && (
+              {product.oldPrice !==0 && product.oldPrice > product.price && (
                 <span className="text-lg sm:text-xl text-text-muted line-through">
                   {product.oldPrice} دج
                 </span>

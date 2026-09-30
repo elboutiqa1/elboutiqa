@@ -1,10 +1,10 @@
 import { CategoryCarousel } from "@/components/ui/CategoryCarousel";
 
 
-import img1 from "@/app/assets/category/hub.avif"
-import img2 from "@/app/assets/category/mannette.avif"
-import img3 from "@/app/assets/category/electronique.avif"
-import img4 from "@/app/assets/category/electromenage.avif"
+import img1 from "@/app/assets/category/hub.png"
+import img2 from "@/app/assets/category/gaming.png"
+import img3 from "@/app/assets/category/electronique.png"
+
 
   const categories= [
         {
@@ -12,17 +12,13 @@ import img4 from "@/app/assets/category/electromenage.avif"
             image: img1,
         },
         {
-            name: "Gaming",
-            image: img2,
-        },
-        {
             name: "Electronique",
             image: img3,
         },
         {
-            name: "Electromenage",
-            image: img4,
-        }, 
+            name:"gaming",
+            image: img2,
+        }
      ];
 
 export default function Category({className}) {
