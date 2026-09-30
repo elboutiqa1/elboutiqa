@@ -1,26 +1,94 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+
+
+
+@theme {
+  --font-cairo: var(--font-cairo), 'Cairo', sans-serif;
+  --font-alexandria: var(--font-alexandria), 'Alexandria', sans-serif;
+  --font-inter: var(--font-inter), 'Inter', sans-serif;
+
+
+--color-primary: #334155;
+--color-primary-hover: #1E293B;
+
+--color-secondary: #FACC15;          /* الأصفر الرئيسي */
+--color-secondary-hover: #EAB308;    /* الأصفر الأغمق عند Hover */
+
+
+--color-background: #FFFFFF;      /* خلفية الصفحة الرئيسية */
+--color-background-muted: #FFFDF5; /* خلفية الأقسام والبطاقات الخفيفة */
+
+--color-border: #EAEAEA;          /* الحدود والفواصل */
+--color-text: #333333;            /* النص الرئيسي */
+--color-text-muted: #666666;      /* النص الثانوي والوصف */
+--color-red:#EF4444;
+--color-red-hover:#DC2626;
+
+
+--color-facebook: #1877F2;
+--color-facebook-hover: #0E65D8;
+
+--color-whatsapp: #25D366;
+--color-whatsapp-hover: #1DA851;
+
+
+--color-instagram: #E4405F;
+--color-instagram-hover: #D02E4C;
+
+
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+
+
+.animate-marquee-mobile-rtl {
+  display: flex;
+  width: max-content;
+  animation: marquee-mobile-rtl 18s linear infinite;
+  will-change: transform;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes marquee-mobile-rtl {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(50%);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+body{
+  background-color: var(--color-background);
+  font-style: normal;
+}
+
+
+.swiper-scrollbar {
+    background: var(--color-primary) !important;
+    height: 4px !important;
+}
+
+.swiper-scrollbar-drag {
+    background: var(--color-background) !important;
+}
+
+
+
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+.cn-toast {
+  border-radius: 16px !important;
+  padding: 14px 18px !important;
+  color: var(--color-background) !important;
+  font-family: var(--font-cairo), sans-serif !important;
+  width: fit-content !important;
+  font-weight: bold !important;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12) !important;
 }

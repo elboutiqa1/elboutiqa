@@ -1,15 +1,35 @@
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import localFont from 'next/font/local';
+import NavBar from "./components/ui/NavBar";
+import { Toaster } from "@/components/ui/sonner"
+import { ShopProvider } from "@/Context/ShopContext";
+import Footer from "./components/ui/footer"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+
+const cairo = localFont({
+  src: './assets/fonts/Cairo-VariableFont_slnt,wght.ttf',
+  variable: '--font-cairo',
+  style: 'normal', // 
+  display: 'swap',
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+
+const alexandria = localFont({
+  src: './assets/fonts/Alexandria-VariableFont_wght.ttf',
+  variable: '--font-alexandria',
+  style: 'normal',
+  display: 'swap',
 });
+
+
+const inter = localFont({
+  src: './assets/fonts/Inter-VariableFont_opsz,wght.ttf',
+  variable: '--font-inter',
+  style: 'normal',
+  display: 'swap',
+});
+
+
 
 export const metadata = {
   title: "Create Next App",
@@ -18,11 +38,20 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="ar" dir="rtl" className={`${cairo.variable} ${alexandria.variable} ${inter.variable}`}>
+      <body className="min-h-full font-cairo">
+      <ShopProvider>
+
+       
+
+        <NavBar />
+        {children}
+        <Footer />
+        <Toaster />
+        
+
+      </ShopProvider>
+        </body>
     </html>
   );
 }
