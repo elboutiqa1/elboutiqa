@@ -7,7 +7,7 @@ import {
   Heart, 
   ShoppingCart, 
   Share2, 
-
+  ArrowDown,
   Check, 
   Truck, 
   ShieldCheck, 
@@ -309,9 +309,25 @@ export default function ShowProduct({ product: initialProduct }) {
             <button
               type="button"
               onClick={scrollToOrderForm}
-              className="flex-1 h-13 sm:h-14 rounded-xl bg-primary text-background hover:bg-primary-hover active:scale-[0.99] font-alexandria font-bold text-base sm:text-lg transition-all duration-200 shadow-lg shadow-primary/25 flex items-center justify-center gap-2 cursor-pointer"
+              className="flex-1   h-13 sm:h-14 rounded-xl bg-primary text-background hover:bg-primary-hover active:scale-[0.99] font-alexandria font-bold text-base sm:text-lg transition-all duration-200 shadow-lg shadow-primary/25 sm:flex hidden items-center justify-center gap-2 cursor-pointer
+              
+              "
             >
               <span>اطلب الآن</span>
+
+              <ArrowDown className="w-5 h-5 " />
+            </button>
+
+
+             <button
+              type="button"
+              onClick={scrollToOrderForm}
+              className="flex-1   h-13 sm:h-14 rounded-xl bg-primary text-background hover:bg-primary-hover active:scale-[0.99] font-alexandria font-bold text-base sm:text-lg transition-all duration-200 shadow-lg shadow-primary/25 flex sm:hidden items-center justify-center gap-2 cursor-pointer
+              
+              "
+            >
+              <span>اطلب الآن</span>
+
               <ArrowUp className="w-5 h-5 " />
             </button>
 
