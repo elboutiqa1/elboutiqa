@@ -54,11 +54,12 @@ export function ShopProvider({ children }) {
 
   const addToCart = (product) => {
     setCart((prev) => {
-      const exists = prev.find((item) => item.id === product.id);
+      const match = (item) => item.id === product.id && (item.selectedOption || "") === (product.selectedOption || "");
+      const exists = prev.find(match);
 
       if (exists) {
         return prev.map((item) =>
-          item.id === product.id
+          match(item)
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
@@ -68,25 +69,31 @@ export function ShopProvider({ children }) {
         ...prev,
         {
           ...product,
-          quantity: 1,
+          quantity: product.quantity || 1,
         },
       ];
     });
   };
 
   const removeFromCart = (product) => {
-    setCart((prev) => prev.filter((item) => item.id !== product.id));
+    setCart((prev) => prev.filter((item) => {
+      if (product.selectedOption !== undefined) {
+        return !(item.id === product.id && (item.selectedOption || "") === (product.selectedOption || ""));
+      }
+      return item.id !== product.id;
+    }));
   };
 
   const decreaseQuantity = (product) => {
     setCart((prev) => {
-      const item = prev.find((i) => i.id === product.id);
+      const match = (item) => item.id === product.id && (product.selectedOption !== undefined ? (item.selectedOption || "") === (product.selectedOption || "") : true);
+      const item = prev.find(match);
       if (!item) return prev;
       if (item.quantity <= 1) {
-        return prev.filter((i) => i.id !== product.id);
+        return prev.filter((i) => !match(i));
       }
       return prev.map((i) =>
-        i.id === product.id ? { ...i, quantity: i.quantity - 1 } : i
+        match(i) ? { ...i, quantity: i.quantity - 1 } : i
       );
     });
   };

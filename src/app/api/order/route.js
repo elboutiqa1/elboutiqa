@@ -44,9 +44,20 @@ export async function POST(request) {
       ? "213" + cleanPhone.slice(1)
       : cleanPhone;
 
+    const selectedOption =
+      body.selectedOption ||
+      body.options ||
+      body["الخيارات"] ||
+      body.option ||
+      (product && (product.selectedOption || product.option)) ||
+      "";
+
     let itemsInfo = "";
     if (product) {
-      itemsInfo = `📦 <b>Produit :</b> ${product.name}\n🔢 <b>Quantité :</b> ${quantity} pièce(s)\n💵 <b>Prix unitaire :</b> ${Number(product.price || 0).toLocaleString()} DZD`;
+      itemsInfo = `📦 <b>Produit :</b> ${product.name}\n` +
+        (selectedOption ? `🏷️ <b>الخيارات (Option) :</b> <b>${selectedOption}</b>\n` : "") +
+        `🔢 <b>Quantité :</b> ${quantity} pièce(s)\n` +
+        `💵 <b>Prix unitaire :</b> ${Number(product.price || 0).toLocaleString()} DZD`;
     } else if (cart && cart.length > 0) {
       const totalCount = cart.reduce((s, i) => s + (i.quantity || 1), 0);
       itemsInfo =
@@ -54,7 +65,7 @@ export async function POST(request) {
         cart
           .map(
             (item, idx) =>
-              `  ${idx + 1}. ${item.name} × ${item.quantity} (${(
+              `  ${idx + 1}. ${item.name}${item.selectedOption ? ` [الخيار: ${item.selectedOption}]` : ""} × ${item.quantity} (${(
                 (item.price || 0) * (item.quantity || 1)
               ).toLocaleString()} DZD)`
           )

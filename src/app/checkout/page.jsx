@@ -81,9 +81,16 @@ export default function CartFormePage() {
                     <h3 className="font-alexandria font-bold text-sm sm:text-base text-primary-hover line-clamp-2 leading-snug">
                       {product.name}
                     </h3>
-                    <p className="text-primary font-bold text-sm sm:text-lg font-cairo">
-                      {product.price.toLocaleString()} دج
-                    </p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="text-primary font-bold text-sm sm:text-lg font-cairo">
+                        {product.price.toLocaleString()} دج
+                      </p>
+                      {product.selectedOption && (
+                        <span className="text-xs font-semibold font-alexandria bg-primary/10 text-primary px-2 py-0.5 rounded-md border border-primary/20">
+                          الخيار: {product.selectedOption}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   {/* الكمية + حذف */}

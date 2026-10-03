@@ -13,7 +13,8 @@ import {
   CheckCircle2, 
   ShoppingBag,
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  SlidersHorizontal
 } from "lucide-react";
 import { toast } from "sonner";
 import { useShop } from "@/Context/ShopContext";
@@ -95,6 +96,8 @@ export default function FormeSection({
   quantity = 1, 
   onQuantityChange,
   totalPrice = 0,
+  selectedOption = "",
+  onOptionChange,
 }) {
   const shop = useShop();
   const cart = shop?.cart || [];
@@ -109,6 +112,17 @@ export default function FormeSection({
   const [deliveryType, setDeliveryType] = useState("home"); // 'home' | 'desk'
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Extract available options if any
+  const productOptions = (product?.options && product.options.length > 0)
+    ? product.options
+    : (product?.sizes && product.sizes.length > 0)
+      ? product.sizes
+      : (product?.variants && product.variants.length > 0)
+        ? product.variants
+        : (product?.colors && product.colors.length > 0)
+          ? product.colors
+          : [];
 
   // Communes list for the selected wilaya
   const availableCommunes = useMemo(() => {
@@ -197,6 +211,9 @@ export default function FormeSection({
           product,
           cart,
           quantity,
+          selectedOption: selectedOption || '',
+          options: selectedOption || '',
+          الخيارات: selectedOption || '',
         }),
       });
 
@@ -274,6 +291,9 @@ export default function FormeSection({
               {product ? (
                 <>
                   <p><span className="text-text-muted">المنتج:</span> <strong className="text-primary">{product?.name}</strong></p>
+                  {selectedOption && (
+                    <p><span className="text-text-muted">الخيارات:</span> <strong className="text-primary">{selectedOption}</strong></p>
+                  )}
                   <p><span className="text-text-muted">الكمية:</span> <strong>{quantity}</strong></p>
                 </>
               ) : (
@@ -292,49 +312,88 @@ export default function FormeSection({
           <form onSubmit={handleSubmit} className="p-5 sm:p-8 space-y-6">
             {/* ملخص المنتج المصغر في الفورم */}
             {product && (
-              <div className="flex items-center justify-between gap-4 p-3.5 sm:p-4 rounded-xl bg-background border border-border">
-                <div className="flex items-center gap-3">
-                  {product.img && (
-                    <Image 
-                      src={product.img} 
-                      alt={product.name} 
-                      width={64}
-                      height={64}
-                      className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-lg border border-border bg-background"
-                    />
-                  )}
-                  <div>
-                    <h4 className="font-alexandria font-bold text-sm sm:text-base text-primary-hover line-clamp-1">
-                      {product.name}
-                    </h4>
-                    <p className="text-primary font-bold text-sm sm:text-base">
-                      {product.price} دج
-                    </p>
+              <div className="p-3.5 sm:p-4 rounded-xl bg-background border border-border space-y-3">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    {product.img && (
+                      <Image 
+                        src={product.img} 
+                        alt={product.name} 
+                        width={64}
+                        height={64}
+                        className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-lg border border-border bg-background"
+                      />
+                    )}
+                    <div>
+                      <h4 className="font-alexandria font-bold text-sm sm:text-base text-primary-hover line-clamp-1">
+                        {product.name}
+                      </h4>
+                      <div className="flex flex-wrap items-center gap-2 mt-0.5">
+                        <p className="text-primary font-bold text-sm sm:text-base">
+                          {product.price} دج
+                        </p>
+                        {selectedOption && (
+                          <span className="text-xs font-semibold font-alexandria bg-primary/10 text-primary px-2 py-0.5 rounded-md border border-primary/20">
+                            الخيار: {selectedOption}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
+
+                  {/* تحكم في الكمية داخل الفورم */}
+                  {onQuantityChange && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-text-muted hidden sm:inline">الكمية:</span>
+                      <div className="flex items-center border border-border rounded-lg bg-background overflow-hidden">
+                        <button
+                          type="button"
+                          onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
+                          className="px-2.5 py-1 text-primary-hover hover:bg-border/60 transition-colors font-bold cursor-pointer"
+                        >
+                          -
+                        </button>
+                        <span className="px-3 py-1 font-bold text-sm text-primary min-w-[28px] text-center">
+                          {quantity}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => onQuantityChange(quantity + 1)}
+                          className="px-2.5 py-1 text-primary-hover hover:bg-border/60 transition-colors font-bold cursor-pointer"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                {/* تحكم في الكمية داخل الفورم */}
-                {onQuantityChange && (
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-text-muted hidden sm:inline">الكمية:</span>
-                    <div className="flex items-center border border-border rounded-lg bg-background overflow-hidden">
-                      <button
-                        type="button"
-                        onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
-                        className="px-2.5 py-1 text-primary-hover hover:bg-border/60 transition-colors font-bold cursor-pointer"
-                      >
-                        -
-                      </button>
-                      <span className="px-3 py-1 font-bold text-sm text-primary min-w-[28px] text-center">
-                        {quantity}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => onQuantityChange(quantity + 1)}
-                        className="px-2.5 py-1 text-primary-hover hover:bg-border/60 transition-colors font-bold cursor-pointer"
-                      >
-                        +
-                      </button>
+                {/* خيارات المنتج السريعة داخل الفورم */}
+                {productOptions.length > 0 && onOptionChange && (
+                  <div className="pt-2.5 border-t border-border/60 flex flex-col sm:flex-row sm:items-center gap-2">
+                    <span className="text-xs font-bold text-primary flex items-center gap-1 shrink-0">
+                      <SlidersHorizontal className="w-3.5 h-3.5 text-primary" />
+                      <span>الخيارات / المقاس:</span>
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {productOptions.map((opt, idx) => {
+                        const optName = typeof opt === "object" ? (opt.name || opt.label) : String(opt);
+                        const isSelected = selectedOption === optName;
+                        return (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() => onOptionChange(optName)}
+                            className={`px-2.5 py-1 rounded-lg border text-xs font-semibold transition-all cursor-pointer ${
+                              isSelected 
+                                ? "border-primary bg-primary text-background shadow-xs font-bold"
+                                : "border-border bg-background text-text hover:border-primary/50"
+                            }`}
+                          >
+                            {optName}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 )}

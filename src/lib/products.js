@@ -14,6 +14,13 @@ import w3 from "@/app/assets/products/w3.jpeg"
 import h11 from "@/app/assets/products/h11.png"
 import h6 from "@/app/assets/products/h6.png"
 
+
+import k1 from "@/app/assets/products/k1.png"
+import k2 from "@/app/assets/products/k2.png"
+import k3 from "@/app/assets/products/k3.png"
+import k4 from "@/app/assets/products/k4.png"
+
+
 export const productsItems = [
   {
     id: 1,
@@ -25,6 +32,7 @@ export const productsItems = [
     images: [e1, e2, e3, e4],
     category: "Electronique",
     inStock: true,
+    options: [],
     features: [
       "طباعة حرارية مباشرة بدون حبر",
       "سرعة طباعة عالية",
@@ -49,6 +57,7 @@ export const productsItems = [
     images: [w1, w2, w3],
     category: "Electronique",
     inStock: true,
+    options: [],
     features: [
       "جهاز تحكم عن بعد عملي وسهل الاستخدام",
       "لوحة مفاتيح QWERTY مدمجة",
@@ -69,6 +78,7 @@ export const productsItems = [
     images: [h11],
     category: "Hub",
     inStock: true,
+    options: [],
     features: [
       "3 منافذ USB 3.2 بسرعة تصل إلى 10Gbps",
       "منفذ HDMI 4K@60Hz",
@@ -94,6 +104,7 @@ export const productsItems = [
     images: [h6],
     category: "Hub",
     inStock: true,
+    options: [],
     features: [
       "3 منافذ USB 3.2 لنقل البيانات بسرعة عالية",
       "منفذ HDMI واحد يدعم دقة تصل إلى 4K@60Hz",
@@ -103,6 +114,30 @@ export const productsItems = [
       "تصميم مدمج وخفيف وسهل الحمل",
       "مناسب للعمل، الدراسة والاستعمال اليومي",
       "التوافق: أجهزة الكمبيوتر المحمولة والأجهزة اللوحية وغيرها من الأجهزة التي تدعم USB-C والوظائف المطلوبة"
+    ]
+  },
+  {
+    id: 5,
+    name: "خزنة إلكترونية Mac Tech مع نظام تثبيت – أمان وحماية لمقتنياتك , Coffre-Fort Électronique Mac Tech",
+    description: "ما تخليش أموالك ووثائقك في أماكن مكشوفة ❌ وفّر لهم حماية أفضل مع الخزائن الإلكترونية Mac Tech 🛡️",
+    price: 17000,
+    oldPrice: 0,
+    img: k1,
+    images: [k1, k2, k3, k4],
+    category: "Electronique",
+    inStock: true,
+    options: [
+      { name: "25×35×25 سم (صغير)", price: 17000, oldPrice: 0 },
+      { name: "30×38×30 سم (متوسط)", price: 20000, oldPrice: 0 },
+      { name: "35×50×31 سم (كبير)", price: 25000, oldPrice: 0 }
+    ],
+    features: [
+      "قفل إلكتروني برمز سري",
+      "مفتاح للطوارئ",
+      "هيكل فولاذي متين",
+      "مساحة داخلية واسعة",
+      "إمكانية التثبيت",
+      "مناسبة للمنزل، المكتب والمحلات"
     ]
   }
 ];

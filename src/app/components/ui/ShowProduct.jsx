@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { 
@@ -11,7 +11,8 @@ import {
   Check, 
   Truck, 
   ShieldCheck, 
-
+  SlidersHorizontal,
+  Layers,
   ChevronRight, 
   ChevronLeft,
   ArrowUp,
@@ -26,6 +27,60 @@ export default function ShowProduct({ product: initialProduct }) {
   // use the product props or the first product
   const product = initialProduct || productsItems[0];
 
+  // extract options / sizes / variants
+  const productOptions = (product.options && product.options.length > 0)
+    ? product.options
+    : (product.sizes && product.sizes.length > 0)
+      ? product.sizes
+      : (product.variants && product.variants.length > 0)
+        ? product.variants
+        : (product.colors && product.colors.length > 0)
+          ? product.colors
+          : [];
+
+  const getInitialOption = (p) => {
+    if (p?.options && p.options.length > 0) {
+      const first = p.options[0];
+      return typeof first === "object" ? (first.name || first.label || "") : String(first);
+    }
+    if (p?.sizes && p.sizes.length > 0) return String(p.sizes[0]);
+    if (p?.variants && p.variants.length > 0) return String(p.variants[0]);
+    if (p?.colors && p.colors.length > 0) return String(p.colors[0]);
+    return "";
+  };
+
+  const [selectedOption, setSelectedOption] = useState(() => getInitialOption(product));
+
+  useEffect(() => {
+    setSelectedOption(getInitialOption(product));
+  }, [product?.id]);
+
+  // find selected option object to get custom price/oldPrice if defined
+  const selectedOptionObj = productOptions.find((opt) => {
+    const optName = typeof opt === "object" ? (opt.name || opt.label) : String(opt);
+    return optName === selectedOption;
+  });
+
+  const currentPrice = (typeof selectedOptionObj === "object" && selectedOptionObj?.price !== undefined)
+    ? Number(selectedOptionObj.price)
+    : Number(product.price || 0);
+
+  const currentOldPrice = (typeof selectedOptionObj === "object" && selectedOptionObj?.oldPrice !== undefined)
+    ? Number(selectedOptionObj.oldPrice)
+    : Number(product.oldPrice || 0);
+
+  // calculate discount percentage
+  const discountPercent = currentOldPrice && currentOldPrice > currentPrice
+    ? Math.round(((currentOldPrice - currentPrice) / currentOldPrice) * 100)
+    : 0;
+
+  const currentProduct = {
+    ...product,
+    price: currentPrice,
+    oldPrice: currentOldPrice,
+    selectedOption,
+  };
+
   // import array images of product
   const images = product.images && product.images.length > 0 
     ? product.images 
@@ -38,12 +93,7 @@ export default function ShowProduct({ product: initialProduct }) {
   const { addToCart, toggleFavorite, favorites, cart ,removeFromCart } = useShop();
 
   const isFavorite = favorites.some((item) => item.id === product.id);
-  const isInCart = cart.some((item) => item.id === product.id);
-
-  // calculate discount percentage
-  const discountPercent = product.oldPrice && product.oldPrice > product.price
-    ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
-    : 0;
+  const isInCart = cart.some((item) => item.id === product.id && (!item.selectedOption || item.selectedOption === selectedOption));
 
   const currentImg = images[activeImageIndex] || product.img;
 
@@ -233,22 +283,73 @@ export default function ShowProduct({ product: initialProduct }) {
           <div className="p-4 sm:p-5 rounded-2xl bg-background border border-border/70 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-baseline gap-3">
               <span className="text-3xl sm:text-4xl font-extrabold font-alexandria text-primary">
-                {product.price} دج
+                {currentPrice} دج
               </span>
-              {product.oldPrice !==0 && product.oldPrice > product.price && (
+              {currentOldPrice !== 0 && currentOldPrice > currentPrice && (
                 <span className="text-lg sm:text-xl text-text-muted line-through">
-                  {product.oldPrice} دج
+                  {currentOldPrice} دج
                 </span>
               )}
             </div>
 
             {discountPercent > 0 && (
               <span className="px-3 py-1.5 rounded-xl bg-red/10 text-red font-bold text-sm border border-red/20">
-                وفرت {product.oldPrice - product.price} دج
+                وفرت {currentOldPrice - currentPrice} دج
               </span>
             )}
           </div>
 
+          {/* قسم اختيار الخيارات / المقاسات (Desktop) */}
+          {productOptions.length > 0 && (
+            <div className="space-y-3 p-4 rounded-2xl bg-background border border-border/80">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-sm font-bold font-alexandria text-primary flex items-center gap-2">
+                  <SlidersHorizontal className="w-4 h-4 text-primary" />
+                  <span>الخيارات المتاحة / المقاس:</span>
+                </span>
+                {selectedOption && (
+                  <span className="text-xs font-semibold font-alexandria text-primary bg-primary/10 px-2.5 py-1 rounded-lg border border-primary/20 truncate max-w-[200px]">
+                    المحدد: {selectedOption}
+                  </span>
+                )}
+              </div>
+
+              <div className="flex flex-wrap gap-2.5">
+                {productOptions.map((opt, idx) => {
+                  const optName = typeof opt === "object" ? (opt.name || opt.label) : String(opt);
+                  const optPrice = typeof opt === "object" ? opt.price : null;
+                  const isSelected = selectedOption === optName;
+
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setSelectedOption(optName)}
+                      className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl border-2 transition-all duration-200 cursor-pointer text-xs sm:text-sm font-alexandria font-semibold select-none ${
+                        isSelected
+                          ? "border-primary bg-primary text-background shadow-md shadow-primary/20 scale-[1.02]"
+                          : "border-border bg-background text-text hover:border-primary/50 hover:bg-background/80"
+                      }`}
+                    >
+                      <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all ${
+                        isSelected ? "border-background bg-background text-primary" : "border-border"
+                      }`}>
+                        {isSelected && <Check className="w-2.5 h-2.5 stroke-[3] text-primary" />}
+                      </div>
+                      <span>{optName}</span>
+                      {optPrice && (
+                        <span className={`text-[11px] px-1.5 py-0.5 rounded font-bold ${
+                          isSelected ? "bg-background/20 text-background" : "bg-primary/10 text-primary"
+                        }`}>
+                          {optPrice} دج
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
            {/* تحديد الكمية */}
           <div className="flex items-center gap-4 py-2">
@@ -273,7 +374,7 @@ export default function ShowProduct({ product: initialProduct }) {
               </button>
             </div>
             <span className="text-md font-bold text-text-muted">
-              (المجموع: <strong className="text-primary">{product.price * quantity} دج</strong>)
+              (المجموع: <strong className="text-primary">{currentPrice * quantity} دج</strong>)
             </span>
           </div>
 
@@ -309,12 +410,9 @@ export default function ShowProduct({ product: initialProduct }) {
             <button
               type="button"
               onClick={scrollToOrderForm}
-              className="flex-1   h-13 sm:h-14 rounded-xl bg-primary text-background hover:bg-primary-hover active:scale-[0.99] font-alexandria font-bold text-base sm:text-lg transition-all duration-200 shadow-lg shadow-primary/25 sm:flex hidden items-center justify-center gap-2 cursor-pointer
-              
-              "
+              className="flex-1   h-13 sm:h-14 rounded-xl bg-primary text-background hover:bg-primary-hover active:scale-[0.99] font-alexandria font-bold text-base sm:text-lg transition-all duration-200 shadow-lg shadow-primary/25 sm:flex hidden items-center justify-center gap-2 cursor-pointer"
             >
               <span>اطلب الآن</span>
-
               <ArrowDown className="w-5 h-5 " />
             </button>
 
@@ -322,12 +420,9 @@ export default function ShowProduct({ product: initialProduct }) {
              <button
               type="button"
               onClick={scrollToOrderForm}
-              className="flex-1   h-13 sm:h-14 rounded-xl bg-primary text-background hover:bg-primary-hover active:scale-[0.99] font-alexandria font-bold text-base sm:text-lg transition-all duration-200 shadow-lg shadow-primary/25 flex sm:hidden items-center justify-center gap-2 cursor-pointer
-              
-              "
+              className="flex-1   h-13 sm:h-14 rounded-xl bg-primary text-background hover:bg-primary-hover active:scale-[0.99] font-alexandria font-bold text-base sm:text-lg transition-all duration-200 shadow-lg shadow-primary/25 flex sm:hidden items-center justify-center gap-2 cursor-pointer"
             >
               <span>اطلب الآن</span>
-
               <ArrowUp className="w-5 h-5 " />
             </button>
 
@@ -337,10 +432,11 @@ export default function ShowProduct({ product: initialProduct }) {
           ${isInCart ? "bg-background text-primary hover:text-primary-hover hover:bg-background" : "bg-primary text-background  hover:bg-primary-hover active:bg-primary-hover active:text-background"} `}
           onClick={() => {
             if(!isInCart){
-                addToCart(product); toast.success("تمت إضافة المنتج إلى السلة")
+                addToCart(currentProduct); 
+                toast.success("تمت إضافة المنتج إلى السلة");
             }else{
-                removeFromCart(product); 
-                toast.error("تمت إزالة المنتج من السلة") 
+                removeFromCart(currentProduct); 
+                toast.error("تمت إزالة المنتج من السلة");
             }
             }}>
 
@@ -361,37 +457,27 @@ export default function ShowProduct({ product: initialProduct }) {
               <span className="text-xs font-bold text-primary">دفع عند الاستلام</span>
               <span className="text-[10px] text-text-muted">بعد المعاينة</span>
             </div>
-
-            
-
-            
           </div>
 
         </div>
       </div>
 
-
-      
-    
       {/* قسم استمارة الطلب (FormeSection) مباشرة أسفل المنتج */}
       <FormeSection 
-        product={product} 
+        product={currentProduct} 
         quantity={quantity} 
         onQuantityChange={setQuantity}
+        selectedOption={selectedOption}
+        onOptionChange={setSelectedOption}
       />
 
-
-        {/* main section of product*/}
+        {/* main section of product (Mobile) */}
       <div className="block sm:hidden grid grid-cols-1 lg:grid-cols-12 mt-10 gap-8 lg:gap-12 items-start">
-        {/* gallery section */}
-
-
         {/* product details*/}
         <div className="lg:col-span-6 flex flex-col gap-7">
           {/* product category and stock*/}
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-xs font-bold text-whatsapp">
-            
               <span className="flex items-center gap-1">
                 <PackageCheck className="w-4 h-4 text-whatsapp" />
                 متوفر في المخزون
@@ -408,21 +494,73 @@ export default function ShowProduct({ product: initialProduct }) {
           <div className="p-4 sm:p-5 rounded-2xl bg-background border border-border/70 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-baseline gap-3">
               <span className="text-3xl sm:text-4xl font-extrabold font-alexandria text-primary">
-                {product.price} دج
+                {currentPrice} دج
               </span>
-              {product.oldPrice !==0 && product.oldPrice > product.price && (
+              {currentOldPrice !== 0 && currentOldPrice > currentPrice && (
                 <span className="text-lg sm:text-xl text-text-muted line-through">
-                  {product.oldPrice} دج
+                  {currentOldPrice} دج
                 </span>
               )}
             </div>
 
             {discountPercent > 0 && (
               <span className="px-3 py-1.5 rounded-xl bg-red/10 text-red font-bold text-sm border border-red/20">
-                وفرت {product.oldPrice - product.price} دج
+                وفرت {currentOldPrice - currentPrice} دج
               </span>
             )}
           </div>
+
+          {/* قسم اختيار الخيارات / المقاسات (Mobile) */}
+          {productOptions.length > 0 && (
+            <div className="space-y-3 p-4 rounded-2xl bg-background border border-border/80">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-sm font-bold font-alexandria text-primary flex items-center gap-2">
+                  <SlidersHorizontal className="w-4 h-4 text-primary" />
+                  <span>الخيارات المتاحة / المقاس:</span>
+                </span>
+                {selectedOption && (
+                  <span className="text-xs font-semibold font-alexandria text-primary bg-primary/10 px-2.5 py-1 rounded-lg border border-primary/20 truncate max-w-[170px]">
+                    المحدد: {selectedOption}
+                  </span>
+                )}
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {productOptions.map((opt, idx) => {
+                  const optName = typeof opt === "object" ? (opt.name || opt.label) : String(opt);
+                  const optPrice = typeof opt === "object" ? opt.price : null;
+                  const isSelected = selectedOption === optName;
+
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setSelectedOption(optName)}
+                      className={`relative flex items-center gap-2 px-3 py-2 rounded-xl border-2 transition-all duration-200 cursor-pointer text-xs font-alexandria font-semibold select-none ${
+                        isSelected
+                          ? "border-primary bg-primary text-background shadow-md shadow-primary/20 scale-[1.02]"
+                          : "border-border bg-background text-text hover:border-primary/50"
+                      }`}
+                    >
+                      <div className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center transition-all ${
+                        isSelected ? "border-background bg-background text-primary" : "border-border"
+                      }`}>
+                        {isSelected && <Check className="w-2.5 h-2.5 stroke-[3] text-primary" />}
+                      </div>
+                      <span>{optName}</span>
+                      {optPrice && (
+                        <span className={`text-[10px] px-1 py-0.5 rounded font-bold ${
+                          isSelected ? "bg-background/20 text-background" : "bg-primary/10 text-primary"
+                        }`}>
+                          {optPrice} دج
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* وصف مختصر للمنتج */}
           <div className="text-sm sm:text-base text-text-muted leading-relaxed font-cairo">
@@ -467,10 +605,14 @@ export default function ShowProduct({ product: initialProduct }) {
           ${isInCart ? "bg-background text-primary hover:text-primary-hover hover:bg-background" : "bg-primary text-background  hover:bg-primary-hover active:bg-primary-hover active:text-background"} `}
           onClick={() => {
             if(!isInCart){
-                addToCart(product); toast.success("تمت إضافة المنتج إلى السلة")
+                addToCart({
+                  ...product,
+                  selectedOption: selectedOption || undefined,
+                }); 
+                toast.success("تمت إضافة المنتج إلى السلة");
             }else{
                 removeFromCart(product); 
-                toast.error("تمت إزالة المنتج من السلة") 
+                toast.error("تمت إزالة المنتج من السلة");
             }
             }}>
 
@@ -491,10 +633,6 @@ export default function ShowProduct({ product: initialProduct }) {
               <span className="text-xs font-bold text-primary">دفع عند الاستلام</span>
               <span className="text-[10px] text-text-muted">بعد المعاينة</span>
             </div>
-
-            
-
-            
           </div>
         </div>
       </div>
