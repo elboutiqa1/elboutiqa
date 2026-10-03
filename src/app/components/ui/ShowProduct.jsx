@@ -93,18 +93,10 @@ export default function ShowProduct({ product: initialProduct }) {
         </span>
       </nav>
 
-    
-      {/* قسم استمارة الطلب (FormeSection) مباشرة أسفل المنتج */}
-      <FormeSection 
-        product={product} 
-        quantity={quantity} 
-        onQuantityChange={setQuantity}
-      />
-
-
-        {/* main section of product*/}
       <div className="grid grid-cols-1 lg:grid-cols-12 mt-10 gap-8 lg:gap-12 items-start">
-        {/* gallery section */}
+
+        
+              {/* gallery section */}
         <div className="lg:col-span-6 flex flex-col gap-4">
           {/* main image */}
           <div className="relative w-full aspect-square bg-background rounded-2xl sm:rounded-3xl border border-border overflow-hidden flex items-center justify-center shadow-sm group">
@@ -219,6 +211,165 @@ export default function ShowProduct({ product: initialProduct }) {
           )}
         </div>
 
+         {/* product details*/}
+        <div className="lg:col-span-6 flex flex-col gap-7">
+                    {/* product category and stock*/}
+          <div className=" hidden sm:flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-xs font-bold text-whatsapp">
+            
+              <span className="flex items-center gap-1">
+                <PackageCheck className="w-4 h-4 text-whatsapp" />
+                متوفر في المخزون
+              </span>
+            </div>
+          </div>
+
+          {/* عنوان المنتج */}
+          <h1 className="text-2xl  sm:text-3xl lg:text-4xl font-extrabold font-alexandria text-primary leading-tight">
+            {product.name}
+          </h1>
+
+          {/* قسم الأسعار */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-background border border-border/70 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-baseline gap-3">
+              <span className="text-3xl sm:text-4xl font-extrabold font-alexandria text-primary">
+                {product.price} دج
+              </span>
+              {product.oldPrice !==0 && product.oldPrice > product.price && (
+                <span className="text-lg sm:text-xl text-text-muted line-through">
+                  {product.oldPrice} دج
+                </span>
+              )}
+            </div>
+
+            {discountPercent > 0 && (
+              <span className="px-3 py-1.5 rounded-xl bg-red/10 text-red font-bold text-sm border border-red/20">
+                وفرت {product.oldPrice - product.price} دج
+              </span>
+            )}
+          </div>
+
+
+           {/* تحديد الكمية */}
+          <div className="flex items-center gap-4 py-2">
+            <span className="text-md font-bold text-primary">الكمية:</span>
+            <div className="flex items-center border-2 border-border rounded-xl bg-background overflow-hidden shadow-sm">
+              <button
+                type="button"
+                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                className="w-10 h-10 flex items-center justify-center text-xl font-bold text-primary hover:bg-background transition-colors cursor-pointer"
+              >
+                -
+              </button>
+              <span className="w-10 h-10 flex items-center justify-center font-bold text-xl font-alexandria text-primary border-x border-border">
+                {quantity}
+              </span>
+              <button
+                type="button"
+                onClick={() => setQuantity((q) => q + 1)}
+                className="w-10 h-10 flex items-center justify-center text-xl font-bold text-primary hover:bg-background transition-colors cursor-pointer"
+              >
+                +
+              </button>
+            </div>
+            <span className="text-md font-bold text-text-muted">
+              (المجموع: <strong className="text-primary">{product.price * quantity} دج</strong>)
+            </span>
+          </div>
+
+
+                    {/* وصف مختصر للمنتج */}
+          <div className="hidden sm:block text-sm sm:text-base text-text-muted leading-relaxed font-cairo">
+            <p>{product.description}</p>
+          </div>
+
+          {/* المميزات السريعة */}
+          {product.features && product.features.length > 0 && (
+            <div className="space-y-2 py-2 hidden sm:block">
+              <h4 className="text-sm font-bold font-alexandria text-primary">
+                أبرز المميزات:
+              </h4>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm sm:text-md text-text">
+                {product.features.map((feat, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <span className="w-5 h-5 rounded-full bg-whatsapp text-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Check className="w-3 h-3 text-primary stroke-[3]" />
+                    </span>
+                    <span>{feat}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+
+          {/* أزرار الشراء والإضافة للسلة */}
+          <div className="hidden sm:flex flex-row items-stretch gap-2 sm:gap-3 pt-2">
+            {/* زر الطلب المباشر - ينزل مباشرة للفورم */}
+            <button
+              type="button"
+              onClick={scrollToOrderForm}
+              className="flex-1 h-13 sm:h-14 rounded-xl bg-primary text-background hover:bg-primary-hover active:scale-[0.99] font-alexandria font-bold text-base sm:text-lg transition-all duration-200 shadow-lg shadow-primary/25 flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>اطلب الآن</span>
+              <ArrowUp className="w-5 h-5 " />
+            </button>
+
+            {/* زر الإضافة إلى السلة */}
+            <div className={` h-14 w-14 flex items-center justify-center rounded-full 
+          transition-all duration-200 cursor-pointer
+          ${isInCart ? "bg-background text-primary hover:text-primary-hover hover:bg-background" : "bg-primary text-background  hover:bg-primary-hover active:bg-primary-hover active:text-background"} `}
+          onClick={() => {
+            if(!isInCart){
+                addToCart(product); toast.success("تمت إضافة المنتج إلى السلة")
+            }else{
+                removeFromCart(product); 
+                toast.error("تمت إزالة المنتج من السلة") 
+            }
+            }}>
+
+            <ShoppingCart className='size-4 sm:size-6' />
+          </div> 
+          </div>
+
+          {/* شارات الضمان والخدمة */}
+          <div className="hidden sm:grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-border">
+            <div className="flex flex-col items-center text-center p-3 rounded-xl bg-background border border-border/50">
+              <Truck className="w-5 h-5 text-primary mb-1" />
+              <span className="text-xs font-bold text-primary">توصيل سريع</span>
+              <span className="text-[10px] text-text-muted">لكل الولايات</span>
+            </div>
+
+            <div className="flex flex-col items-center text-center p-3 rounded-xl bg-background border border-border/50">
+              <ShieldCheck className="w-5 h-5 text-primary mb-1" />
+              <span className="text-xs font-bold text-primary">دفع عند الاستلام</span>
+              <span className="text-[10px] text-text-muted">بعد المعاينة</span>
+            </div>
+
+            
+
+            
+          </div>
+
+        </div>
+      </div>
+
+
+      
+    
+      {/* قسم استمارة الطلب (FormeSection) مباشرة أسفل المنتج */}
+      <FormeSection 
+        product={product} 
+        quantity={quantity} 
+        onQuantityChange={setQuantity}
+      />
+
+
+        {/* main section of product*/}
+      <div className="block sm:hidden grid grid-cols-1 lg:grid-cols-12 mt-10 gap-8 lg:gap-12 items-start">
+        {/* gallery section */}
+
+
         {/* product details*/}
         <div className="lg:col-span-6 flex flex-col gap-7">
           {/* product category and stock*/}
@@ -281,32 +432,6 @@ export default function ShowProduct({ product: initialProduct }) {
             </div>
           )}
 
-          {/* تحديد الكمية */}
-          <div className="flex items-center gap-4 py-2">
-            <span className="text-md font-bold text-primary">الكمية:</span>
-            <div className="flex items-center border-2 border-border rounded-xl bg-background overflow-hidden shadow-sm">
-              <button
-                type="button"
-                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                className="w-10 h-10 flex items-center justify-center text-xl font-bold text-primary hover:bg-background transition-colors cursor-pointer"
-              >
-                -
-              </button>
-              <span className="w-10 h-10 flex items-center justify-center font-bold text-xl font-alexandria text-primary border-x border-border">
-                {quantity}
-              </span>
-              <button
-                type="button"
-                onClick={() => setQuantity((q) => q + 1)}
-                className="w-10 h-10 flex items-center justify-center text-xl font-bold text-primary hover:bg-background transition-colors cursor-pointer"
-              >
-                +
-              </button>
-            </div>
-            <span className="text-md font-bold text-text-muted">
-              (المجموع: <strong className="text-primary">{product.price * quantity} دج</strong>)
-            </span>
-          </div>
 
           {/* أزرار الشراء والإضافة للسلة */}
           <div className="flex flex-row items-stretch gap-2 sm:gap-3 pt-2">
