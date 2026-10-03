@@ -7,15 +7,14 @@ import {
   Heart, 
   ShoppingCart, 
   Share2, 
-  Star, 
+
   Check, 
   Truck, 
   ShieldCheck, 
-  RotateCcw, 
+
   ChevronRight, 
   ChevronLeft,
-  ArrowDown,
-  Sparkles,
+  ArrowUp,
   PackageCheck
 } from "lucide-react";
 import { toast } from "sonner";
@@ -94,8 +93,17 @@ export default function ShowProduct({ product: initialProduct }) {
         </span>
       </nav>
 
-      {/* main section of product*/}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+    
+      {/* قسم استمارة الطلب (FormeSection) مباشرة أسفل المنتج */}
+      <FormeSection 
+        product={product} 
+        quantity={quantity} 
+        onQuantityChange={setQuantity}
+      />
+
+
+        {/* main section of product*/}
+      <div className="grid grid-cols-1 lg:grid-cols-12 mt-10 gap-8 lg:gap-12 items-start">
         {/* gallery section */}
         <div className="lg:col-span-6 flex flex-col gap-4">
           {/* main image */}
@@ -309,7 +317,7 @@ export default function ShowProduct({ product: initialProduct }) {
               className="flex-1 h-13 sm:h-14 rounded-xl bg-primary text-background hover:bg-primary-hover active:scale-[0.99] font-alexandria font-bold text-base sm:text-lg transition-all duration-200 shadow-lg shadow-primary/25 flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>اطلب الآن</span>
-              <ArrowDown className="w-5 h-5 " />
+              <ArrowUp className="w-5 h-5 " />
             </button>
 
             {/* زر الإضافة إلى السلة */}
@@ -343,26 +351,14 @@ export default function ShowProduct({ product: initialProduct }) {
               <span className="text-[10px] text-text-muted">بعد المعاينة</span>
             </div>
 
-            <div className="flex flex-col items-center text-center p-3 rounded-xl bg-background border border-border/50">
-              <RotateCcw className="w-5 h-5 text-primary mb-1" />
-              <span className="text-xs font-bold text-primary">ضمان الاستبدال</span>
-              <span className="text-[10px] text-text-muted">في حال أي عطب</span>
-            </div>
+            
 
-            <div className="flex flex-col items-center text-center p-3 rounded-xl bg-background border border-border/50">
-              <Sparkles className="w-5 h-5 text-primary mb-1" />
-              <span className="text-xs font-bold text-primary">جودة أصلية</span>
-              <span className="text-[10px] text-text-muted">100% مضمونة</span>
-            </div>
+            
           </div>
         </div>
       </div>
-      {/* قسم استمارة الطلب (FormeSection) مباشرة أسفل المنتج */}
-      <FormeSection 
-        product={product} 
-        quantity={quantity} 
-        onQuantityChange={setQuantity}
-      />
+
+
     </div>
   );
 }
