@@ -30,7 +30,7 @@ export const productsItems = [
     oldPrice: 0,
     img: e4,
     images: [e1, e2, e3, e4],
-    category: "Electronique",
+    category: "Imprimante",
     inStock: true,
     options: [],
     features: [
@@ -124,12 +124,12 @@ export const productsItems = [
     oldPrice: 0,
     img: k1,
     images: [k1, k2, k3, k4],
-    category: "Electronique",
+    category: " Coffre",
     inStock: true,
     options: [
       { name: "25×35×25 سم (صغير)", price: 17000, oldPrice: 0 },
       { name: "30×38×30 سم (متوسط)", price: 20000, oldPrice: 0 },
-      { name: "35×50×31 سم (كبير)", price: 25000, oldPrice: 0 }
+      { name: "31×35×50 سم (كبير)", price: 25000, oldPrice: 0 }
     ],
     features: [
       "قفل إلكتروني برمز سري",

@@ -4,7 +4,8 @@ import { CategoryCarousel } from "@/components/ui/CategoryCarousel";
 import img1 from "@/app/assets/category/hub.png"
 import img2 from "@/app/assets/category/gaming.png"
 import img3 from "@/app/assets/category/electronique.png"
-
+import img4 from "@/app/assets/category/imprimante.png"
+import img5 from "@/app/assets/category/coffre.png"
 
   const categories= [
         {
@@ -16,8 +17,16 @@ import img3 from "@/app/assets/category/electronique.png"
             image: img3,
         },
         {
-            name:"gaming",
+            name:"Gaming",
             image: img2,
+        },
+        {
+            name:"Imprimante",
+            image:img4
+        },
+        {
+            name:"Coffre",
+            image:img5
         }
      ];
 
