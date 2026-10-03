@@ -650,10 +650,7 @@ export default function FormeSection({
                 <ShieldCheck className="w-4 h-4 text-primary" />
                 <span>الدفع بعد الاستلام والمعاينة</span>
               </div>
-              <div className="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-background">
-                <Sparkles className="w-4 h-4 text-primary" />
-                <span>ضمان الجودة والاستبدال</span>
-              </div>
+            
             </div>
           </form>
         )}
