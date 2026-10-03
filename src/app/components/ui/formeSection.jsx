@@ -641,7 +641,7 @@ export default function FormeSection({
             </button>
 
             {/* شارات الثقة */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-center text-xs text-text-muted">
+            <div className="flex justify-center items-center gap-3 pt-2 text-center  text-xs text-text-muted">
               <div className="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-background">
                 <Truck className="w-4 h-4 text-primary" />
                 <span>توصيل سريع لباب المنزل</span>

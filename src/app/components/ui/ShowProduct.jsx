@@ -333,7 +333,7 @@ export default function ShowProduct({ product: initialProduct }) {
           </div>
 
           {/* شارات الضمان والخدمة */}
-          <div className="hidden sm:grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-border">
+          <div className="hidden sm:flex justify-center items-center w-full gap-3 pt-4 border-t border-border">
             <div className="flex flex-col items-center text-center p-3 rounded-xl bg-background border border-border/50">
               <Truck className="w-5 h-5 text-primary mb-1" />
               <span className="text-xs font-bold text-primary">توصيل سريع</span>
