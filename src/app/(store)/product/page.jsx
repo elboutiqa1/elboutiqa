@@ -1,4 +1,4 @@
-import ProductsSection from "../components/ProductsSection";
+import ProductsSection from "@/app/components/ProductsSection";
 import Link from "next/link";
 
 export default function Product(){

@@ -247,8 +247,8 @@ export default function NavBar() {
             <div key={favorite.id} className='w-full  flex items-center justify-between gap-5 p-4  border-[1px] border-border rounded-xl bg-background   '>
             {/*image*/}
             <SheetClose asChild>
-              <Link href={`/product/${favorite.id}`} className='max-w-60 h-full flex  justify-start sm:pr-10 items-center z-10 overflow-hidden'>
-                <Image src={favorite.img} alt={favorite.name} className='object-cover  w-30 sm:w-40 h-auto hover:scale-110  transition-all duration-200 
+              <Link href={`/product/${favorite.slug || favorite.id}`} className='max-w-60 h-full flex  justify-start sm:pr-10 items-center z-10 overflow-hidden'>
+                <Image src={favorite.img} alt={favorite.name} width={200} height={200} className='object-cover  w-30 sm:w-40 h-auto hover:scale-110  transition-all duration-200 
                 
                 '/>
               </Link>
@@ -259,7 +259,7 @@ export default function NavBar() {
             
              {/*name*/}
              <SheetClose asChild>
-             <Link href={`/product/${favorite.id}`}>
+             <Link href={`/product/${favorite.slug || favorite.id}`}>
               <div className=' max-w-[500px] flex justify-center items-center flex-col flex-1 '>
                 <h2 className='text-sm sm:text-xl  font-bold font-alexandria text-primary-hover line-clamp-2'>{favorite.name}</h2>
                 <p className='text-start text-text-muted text-sm lg:text-lg line-clamp-2'>{favorite.description}</p>
@@ -373,8 +373,8 @@ export default function NavBar() {
            '>
             {/*image*/}
             <SheetClose asChild>
-              <Link href={`/product/${product.id}`} className='h-full  flex   justify-center  items-center z-10 overflow-hidden'>
-                <Image src={product.img} alt={product.name} className='object-cover  w-30 sm:w-25 h-auto  hover:scale-110  transition-all duration-200 
+              <Link href={`/product/${product.slug || product.id}`} className='h-full  flex   justify-center  items-center z-10 overflow-hidden'>
+                <Image src={product.img} alt={product.name} width={300} height={300} className='object-cover  w-30 sm:w-25 h-auto  hover:scale-110  transition-all duration-200 
                 
                 '/>
               </Link>
@@ -385,7 +385,7 @@ export default function NavBar() {
              {/*name*/}
               <div className='w-fit flex justify-center items-center flex-col flex-1'>
                 <SheetClose asChild>
-                <Link href={`/product/${product.id}`} className='w-fit flex justify-center items-center flex-col flex-1'>
+                <Link href={`/product/${product.slug || product.id}`} className='w-fit flex justify-center items-center flex-col flex-1'>
                 <h2 className='text-sm sm:text-md  font-bold font-alexandria text-primary-hover line-clamp-2'>{product.name}</h2>
                 </Link>
                 </SheetClose>

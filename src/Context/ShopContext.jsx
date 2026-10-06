@@ -70,6 +70,7 @@ export function ShopProvider({ children }) {
         {
           ...product,
           quantity: product.quantity || 1,
+          inStock: product.inStock,
         },
       ];
     });

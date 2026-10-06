@@ -1,9 +1,9 @@
 "use client"
-import FormeSection from "../components/ui/formeSection";
+import FormeSection from "@/app/components/ui/formeSection";
 import { useShop } from "@/Context/ShopContext";
 import Link from "next/link";
 import Image from "next/image";
-import { Trash2, Minus, Plus, ShoppingCart } from "lucide-react";
+import { Trash2, Minus, Plus, ShoppingCart,  PackageCheck, PackageX } from "lucide-react";
 
 export default function CartFormePage() {
 
@@ -63,8 +63,12 @@ export default function CartFormePage() {
               {cart.map((product) => (
                 <div
                   key={product.id}
-                  className="flex items-center gap-3 sm:gap-5 p-4 sm:p-5  transition-colors"
+                  className="flex relative items-center gap-3 sm:gap-5 p-4 sm:p-5  transition-colors"
                 >
+
+                
+
+
                   {/* صورة المنتج */}
                   <div className="shrink-0">
                     <Image
@@ -92,6 +96,18 @@ export default function CartFormePage() {
                       )}
                     </div>
                   </div>
+
+
+             {/*instock */}
+              {/* product  stock*/}
+            <div className="flex  items-center gap-2 text-xs font-bold text-whatsapp">
+            {product.inStock ? <span className="flex items-center gap-1">
+                <PackageCheck className="w-4 h-4 text-whatsapp" />
+              </span> : <span className="flex items-center gap-1 text-red">
+                <PackageX className="w-4 h-4 text-red" />
+                 إحذف للمتابعة
+              </span>}
+                </div>
 
                   {/* الكمية + حذف */}
                   <div className="flex  items-center gap-4 shrink-0">
@@ -145,7 +161,7 @@ export default function CartFormePage() {
       </div>
 
       {/* استمارة الطلب */}
-      {totalItems ===0 ? null :<FormeSection totalPrice={totalPrice} />}
+      {totalItems ===0 || cart.filter((product) => !product.inStock).length !== 0 ? null : <FormeSection totalPrice={totalPrice} /> }
       
     </div>
   );

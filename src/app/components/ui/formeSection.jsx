@@ -223,6 +223,13 @@ export default function FormeSection({
         setIsSubmitted(true);
         toast.success("تم استلام طلبك بنجاح! سنتصل بك قريباً لتأكيد الإرسال.");
 
+        // dashboard counter to mongoDb
+        fetch('/api/dashboard', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ grandTotal }),
+        }).catch((err) => console.error('Dashboard update error:', err));
+
         // Meta Pixel - Purchase
         if (typeof window !== "undefined" && window.fbq) {
           window.fbq('track', 'Purchase', {

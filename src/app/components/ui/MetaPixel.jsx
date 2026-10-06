@@ -1,11 +1,13 @@
-"use client";
+import connectDB from "@/lib/mongodb";
+import Pixel from "@/models/metaPixel";
 
 import Script from "next/script";
 
-export default function MetaPixel() {
-  const pixelId = "1207218013516113";
+export default async function MetaPixel() {
+    await connectDB();
+    const pixel = await Pixel.findOne({ isActive: true }).lean();
 
-  if (!pixelId) return null;
+    if (!pixel?.pixelId) return null;
 
   return (
     <>
@@ -23,7 +25,7 @@ export default function MetaPixel() {
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
 
-            fbq('init', '${pixelId}');
+            fbq('init', '${pixel.pixelId}');
             fbq('track', 'PageView');
           `,
         }}

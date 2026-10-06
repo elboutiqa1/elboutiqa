@@ -1,5 +1,5 @@
-import Category from "../components/ui/Category";
-import ProductsSection from "../components/ProductsSection";
+import Category from "@/app/components/ui/Category";
+import ProductsSection from "@/app/components/ProductsSection";
 
 export default async function categorySection({searchParams} ) {
 

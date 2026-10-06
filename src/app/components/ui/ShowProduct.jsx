@@ -12,29 +12,25 @@ import {
   Truck, 
   ShieldCheck, 
   SlidersHorizontal,
-  Layers,
   ChevronRight, 
   ChevronLeft,
   ArrowUp,
-  PackageCheck
+  PackageCheck,
+  PackageX
 } from "lucide-react";
 import { toast } from "sonner";
 import { useShop } from "@/Context/ShopContext";
 import FormeSection from "./formeSection";
-import { productsItems } from "@/lib/products";
 
-export default function ShowProduct({ product: initialProduct }) {
-  // use the product props or the first product
-  const product = initialProduct || productsItems[0];
-
+export default function ShowProduct({ product }) {
   // extract options / sizes / variants
-  const productOptions = (product.options && product.options.length > 0)
+  const productOptions = (product?.options && product.options.length > 0)
     ? product.options
-    : (product.sizes && product.sizes.length > 0)
+    : (product?.sizes && product.sizes.length > 0)
       ? product.sizes
-      : (product.variants && product.variants.length > 0)
+      : (product?.variants && product.variants.length > 0)
         ? product.variants
-        : (product.colors && product.colors.length > 0)
+        : (product?.colors && product.colors.length > 0)
           ? product.colors
           : [];
 
@@ -53,7 +49,7 @@ export default function ShowProduct({ product: initialProduct }) {
 
   useEffect(() => {
     setSelectedOption(getInitialOption(product));
-  }, [product?.id]);
+  }, [product?.id, product?._id, product?.slug]);
 
   // find selected option object to get custom price/oldPrice if defined
   const selectedOptionObj = productOptions.find((opt) => {
@@ -63,11 +59,11 @@ export default function ShowProduct({ product: initialProduct }) {
 
   const currentPrice = (typeof selectedOptionObj === "object" && selectedOptionObj?.price !== undefined)
     ? Number(selectedOptionObj.price)
-    : Number(product.price || 0);
+    : Number(product?.price || 0);
 
   const currentOldPrice = (typeof selectedOptionObj === "object" && selectedOptionObj?.oldPrice !== undefined)
     ? Number(selectedOptionObj.oldPrice)
-    : Number(product.oldPrice || 0);
+    : Number(product?.oldPrice || 0);
 
   // calculate discount percentage
   const discountPercent = currentOldPrice && currentOldPrice > currentPrice
@@ -76,26 +72,32 @@ export default function ShowProduct({ product: initialProduct }) {
 
   const currentProduct = {
     ...product,
+    id: product?.id || product?._id,
+    _id: product?._id || product?.id,
+    slug: product?.slug || product?._id || product?.id,
     price: currentPrice,
     oldPrice: currentOldPrice,
     selectedOption,
   };
 
   // import array images of product
-  const images = product.images && product.images.length > 0 
+  const images = product?.images && product.images.length > 0 
     ? product.images 
-    : (product.img ? [product.img] : []);
+    : (product?.img ? [product.img] : []);
 
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [activeTab, setActiveTab] = useState("description"); // description | specs | delivery
 
-  const { addToCart, toggleFavorite, favorites, cart ,removeFromCart } = useShop();
+  const { addToCart, toggleFavorite, favorites, cart, removeFromCart } = useShop();
 
-  const isFavorite = favorites.some((item) => item.id === product.id);
-  const isInCart = cart.some((item) => item.id === product.id && (!item.selectedOption || item.selectedOption === selectedOption));
+  const productId = product?.id || product?._id;
+  const isFavorite = favorites.some((item) => (item.id === productId) || (product?.slug && item.slug === product.slug));
+  const isInCart = cart.some((item) => 
+    ((item.id === productId) || (product?.slug && item.slug === product.slug)) && 
+    (!item.selectedOption || item.selectedOption === selectedOption)
+  );
 
-  const currentImg = images[activeImageIndex] || product.img;
+  const currentImg = images[activeImageIndex] || product?.img;
 
   const nextImage = () => {
     setActiveImageIndex((prev) => (prev + 1) % images.length);
@@ -115,7 +117,7 @@ export default function ShowProduct({ product: initialProduct }) {
   const handleShare = () => {
     if (typeof window !== "undefined" && navigator.share) {
       navigator.share({
-        title: product.name,
+        title: product?.name,
         url: window.location.href,
       }).catch(() => {});
     } else {
@@ -134,26 +136,24 @@ export default function ShowProduct({ product: initialProduct }) {
           الرئيسية
         </Link>
         <span>/</span>
-        <Link href="/product" className="hover:text-primary transition-colors">
+        <Link href="/#products" className="hover:text-primary transition-colors">
           المنتجات
         </Link>
         <span>/</span>
         <span className="text-primary font-semibold truncate max-w-[220px] sm:max-w-md">
-          {product.name}
+          {product?.name}
         </span>
       </nav>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 mt-10 gap-8 lg:gap-12 items-start">
-
-        
-              {/* gallery section */}
+        {/* gallery section */}
         <div className="lg:col-span-6 flex flex-col gap-4">
           {/* main image */}
           <div className="relative w-full aspect-square bg-background rounded-2xl sm:rounded-3xl border border-border overflow-hidden flex items-center justify-center shadow-sm group">
             {/* discount and stock tags */}
             <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 flex flex-col gap-2">
               {discountPercent > 0 && (
-                <span className="text-sm sm:text-md top-2 left-2  py-1 px-2 bg-primary text-background font-semibold rounded-2xl  z-30">
+                <span className="text-sm sm:text-md top-2 left-2 py-1 px-2 bg-primary text-background font-semibold rounded-2xl z-30">
                   خصم {discountPercent}%
                 </span>
               )}
@@ -164,7 +164,7 @@ export default function ShowProduct({ product: initialProduct }) {
               <button
                 type="button"
                 onClick={handleShare}
-                className="w-10 h-10 rounded-full bg-background/90 backdrop-blur-md border border-border text-primary hover:text-primary-hover  transition-all   flex items-center justify-center shadow-sm cursor-pointer"
+                className="w-10 h-10 rounded-full bg-background/90 backdrop-blur-md border border-border text-primary hover:text-primary-hover transition-all flex items-center justify-center shadow-sm cursor-pointer"
                 title="مشاركة المنتج"
               >
                 <Share2 className="w-4 h-4" />
@@ -172,7 +172,7 @@ export default function ShowProduct({ product: initialProduct }) {
               <button
                 type="button"
                 onClick={() => {
-                  toggleFavorite(product);
+                  toggleFavorite(currentProduct);
                   if (isFavorite) {
                     toast.error("تمت إزالة المنتج من المفضلة");
                   } else {
@@ -195,7 +195,7 @@ export default function ShowProduct({ product: initialProduct }) {
               {currentImg && (
                 <Image
                   src={currentImg}
-                  alt={product.name}
+                  alt={product?.name || "Product"}
                   fill
                   priority
                   className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
@@ -244,13 +244,13 @@ export default function ShowProduct({ product: initialProduct }) {
                   onClick={() => setActiveImageIndex(idx)}
                   className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl border-2 overflow-hidden flex-shrink-0 bg-background p-1 transition-all cursor-pointer mt-2 mx-2 ${
                     activeImageIndex === idx
-                      ? "border-primary   scale-102 shadow-md"
+                      ? "border-primary scale-102 shadow-md"
                       : "border-border hover:border-primary/40 opacity-75 hover:opacity-100"
                   }`}
                 >
                   <Image
                     src={img}
-                    alt={`${product.name} - صورة ${idx + 1}`}
+                    alt={`${product?.name} - صورة ${idx + 1}`}
                     fill
                     className="object-contain p-1"
                     sizes="96px"
@@ -261,22 +261,27 @@ export default function ShowProduct({ product: initialProduct }) {
           )}
         </div>
 
-         {/* product details*/}
+        {/* product details*/}
         <div className="lg:col-span-6 flex flex-col gap-7">
-                    {/* product category and stock*/}
-          <div className=" hidden sm:flex items-center justify-between gap-3">
+
+
+          {/* product category and stock*/}
+        
             <div className="flex items-center gap-2 text-xs font-bold text-whatsapp">
-            
-              <span className="flex items-center gap-1">
+            {product.inStock ? <span className="flex items-center gap-1">
                 <PackageCheck className="w-4 h-4 text-whatsapp" />
                 متوفر في المخزون
-              </span>
+              </span> : <span className="flex items-center gap-1 text-red">
+                <PackageX className="w-4 h-4 text-red" />
+                غير متوفر في المخزون
+              </span>}
             </div>
-          </div>
+          
+
 
           {/* عنوان المنتج */}
-          <h1 className="text-2xl  sm:text-3xl lg:text-4xl font-extrabold font-alexandria text-primary leading-tight">
-            {product.name}
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold font-alexandria text-primary leading-tight">
+            {product?.name}
           </h1>
 
           {/* قسم الأسعار */}
@@ -351,7 +356,7 @@ export default function ShowProduct({ product: initialProduct }) {
             </div>
           )}
 
-           {/* تحديد الكمية */}
+          {/* تحديد الكمية */}
           <div className="flex items-center gap-4 py-2">
             <span className="text-md font-bold text-primary">الكمية:</span>
             <div className="flex items-center border-2 border-border rounded-xl bg-background overflow-hidden shadow-sm">
@@ -378,14 +383,13 @@ export default function ShowProduct({ product: initialProduct }) {
             </span>
           </div>
 
-
-                    {/* وصف مختصر للمنتج */}
+          {/* وصف مختصر للمنتج */}
           <div className="hidden sm:block text-sm sm:text-base text-text-muted leading-relaxed font-cairo">
-            <p>{product.description}</p>
+            <p>{product?.description}</p>
           </div>
 
           {/* المميزات السريعة */}
-          {product.features && product.features.length > 0 && (
+          {product?.features && product.features.length > 0 && (
             <div className="space-y-2 py-2 hidden sm:block">
               <h4 className="text-sm font-bold font-alexandria text-primary">
                 أبرز المميزات:
@@ -403,45 +407,34 @@ export default function ShowProduct({ product: initialProduct }) {
             </div>
           )}
 
-
           {/* أزرار الشراء والإضافة للسلة */}
           <div className="hidden sm:flex flex-row items-stretch gap-2 sm:gap-3 pt-2">
             {/* زر الطلب المباشر - ينزل مباشرة للفورم */}
             <button
               type="button"
               onClick={scrollToOrderForm}
-              className="flex-1   h-13 sm:h-14 rounded-xl bg-primary text-background hover:bg-primary-hover active:scale-[0.99] font-alexandria font-bold text-base sm:text-lg transition-all duration-200 shadow-lg shadow-primary/25 sm:flex hidden items-center justify-center gap-2 cursor-pointer"
+              className="flex-1 h-13 sm:h-14 rounded-xl bg-primary text-background hover:bg-primary-hover active:scale-[0.99] font-alexandria font-bold text-base sm:text-lg transition-all duration-200 shadow-lg shadow-primary/25 sm:flex hidden items-center justify-center gap-2 cursor-pointer"
             >
-              <span>اطلب الآن</span>
-              <ArrowDown className="w-5 h-5 " />
-            </button>
-
-
-             <button
-              type="button"
-              onClick={scrollToOrderForm}
-              className="flex-1   h-13 sm:h-14 rounded-xl bg-primary text-background hover:bg-primary-hover active:scale-[0.99] font-alexandria font-bold text-base sm:text-lg transition-all duration-200 shadow-lg shadow-primary/25 flex sm:hidden items-center justify-center gap-2 cursor-pointer"
-            >
-              <span>اطلب الآن</span>
-              <ArrowUp className="w-5 h-5 " />
+              {product.inStock ? <span>اطلب الآن</span> : <span>تواصل معنا لطلب خاص</span>}
+              <ArrowDown className="w-5 h-5" />
             </button>
 
             {/* زر الإضافة إلى السلة */}
-            <div className={` h-14 w-14 flex items-center justify-center rounded-full 
-          transition-all duration-200 cursor-pointer
-          ${isInCart ? "bg-background text-primary hover:text-primary-hover hover:bg-background" : "bg-primary text-background  hover:bg-primary-hover active:bg-primary-hover active:text-background"} `}
-          onClick={() => {
-            if(!isInCart){
-                addToCart(currentProduct); 
-                toast.success("تمت إضافة المنتج إلى السلة");
-            }else{
-                removeFromCart(currentProduct); 
-                toast.error("تمت إزالة المنتج من السلة");
-            }
-            }}>
-
-            <ShoppingCart className='size-4 sm:size-6' />
-          </div> 
+            <div className={`h-14 w-14 flex items-center justify-center rounded-full 
+              transition-all duration-200 cursor-pointer
+              ${isInCart ? "bg-background text-primary hover:text-primary-hover hover:bg-background" : "bg-primary text-background hover:bg-primary-hover active:bg-primary-hover active:text-background"}`}
+              onClick={() => {
+                if (!isInCart) {
+                  addToCart(currentProduct); 
+                  toast.success("تمت إضافة المنتج إلى السلة");
+                } else {
+                  removeFromCart(currentProduct); 
+                  toast.error("تمت إزالة المنتج من السلة");
+                }
+              }}
+            >
+              <ShoppingCart className='size-4 sm:size-6' />
+            </div> 
           </div>
 
           {/* شارات الضمان والخدمة */}
@@ -458,36 +451,37 @@ export default function ShowProduct({ product: initialProduct }) {
               <span className="text-[10px] text-text-muted">بعد المعاينة</span>
             </div>
           </div>
-
         </div>
       </div>
 
       {/* قسم استمارة الطلب (FormeSection) مباشرة أسفل المنتج */}
-      <FormeSection 
+     { product.inStock && <FormeSection 
         product={currentProduct} 
         quantity={quantity} 
         onQuantityChange={setQuantity}
         selectedOption={selectedOption}
         onOptionChange={setSelectedOption}
       />
+       }
 
-        {/* main section of product (Mobile) */}
+      {/* main section of product (Mobile) */}
       <div className="block sm:hidden grid grid-cols-1 lg:grid-cols-12 mt-10 gap-8 lg:gap-12 items-start">
-        {/* product details*/}
         <div className="lg:col-span-6 flex flex-col gap-7">
-          {/* product category and stock*/}
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-xs font-bold text-whatsapp">
-              <span className="flex items-center gap-1">
+              {product.inStock ? <span className="flex items-center gap-1">
                 <PackageCheck className="w-4 h-4 text-whatsapp" />
                 متوفر في المخزون
-              </span>
+              </span> : <span className="flex items-center gap-1 text-red">
+                <PackageX className="w-4 h-4 text-red" />
+                غير متوفر في المخزون
+              </span>}
             </div>
           </div>
 
           {/* عنوان المنتج */}
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold font-alexandria text-primary leading-tight">
-            {product.name}
+            {product?.name}
           </h1>
 
           {/* قسم الأسعار */}
@@ -564,11 +558,11 @@ export default function ShowProduct({ product: initialProduct }) {
 
           {/* وصف مختصر للمنتج */}
           <div className="text-sm sm:text-base text-text-muted leading-relaxed font-cairo">
-            <p>{product.description}</p>
+            <p>{product?.description}</p>
           </div>
 
           {/* المميزات السريعة */}
-          {product.features && product.features.length > 0 && (
+          {product?.features && product.features.length > 0 && (
             <div className="space-y-2 py-2">
               <h4 className="text-sm font-bold font-alexandria text-primary">
                 أبرز المميزات:
@@ -586,38 +580,36 @@ export default function ShowProduct({ product: initialProduct }) {
             </div>
           )}
 
-
           {/* أزرار الشراء والإضافة للسلة */}
           <div className="flex flex-row items-stretch gap-2 sm:gap-3 pt-2">
-            {/* زر الطلب المباشر - ينزل مباشرة للفورم */}
+            {/* زر الطلب المباشر */}
+          
             <button
               type="button"
               onClick={scrollToOrderForm}
               className="flex-1 h-13 sm:h-14 rounded-xl bg-primary text-background hover:bg-primary-hover active:scale-[0.99] font-alexandria font-bold text-base sm:text-lg transition-all duration-200 shadow-lg shadow-primary/25 flex items-center justify-center gap-2 cursor-pointer"
             >
-              <span>اطلب الآن</span>
-              <ArrowUp className="w-5 h-5 " />
+              {product.inStock ? <span>اطلب الآن</span> : <span>تواصل معنا لطلب خاص</span>}
+
+              <ArrowUp className="w-5 h-5" />
             </button>
 
             {/* زر الإضافة إلى السلة */}
-            <div className={` h-14 w-14 flex items-center justify-center rounded-full 
-          transition-all duration-200 cursor-pointer
-          ${isInCart ? "bg-background text-primary hover:text-primary-hover hover:bg-background" : "bg-primary text-background  hover:bg-primary-hover active:bg-primary-hover active:text-background"} `}
-          onClick={() => {
-            if(!isInCart){
-                addToCart({
-                  ...product,
-                  selectedOption: selectedOption || undefined,
-                }); 
-                toast.success("تمت إضافة المنتج إلى السلة");
-            }else{
-                removeFromCart(product); 
-                toast.error("تمت إزالة المنتج من السلة");
-            }
-            }}>
-
-            <ShoppingCart className='size-4 sm:size-6' />
-          </div> 
+            <div className={`h-14 w-14 flex items-center justify-center rounded-full 
+              transition-all duration-200 cursor-pointer
+              ${isInCart ? "bg-background text-primary hover:text-primary-hover hover:bg-background" : "bg-primary text-background hover:bg-primary-hover active:bg-primary-hover active:text-background"}`}
+              onClick={() => {
+                if (!isInCart) {
+                  addToCart(currentProduct); 
+                  toast.success("تمت إضافة المنتج إلى السلة");
+                } else {
+                  removeFromCart(currentProduct); 
+                  toast.error("تمت إزالة المنتج من السلة");
+                }
+              }}
+            >
+              <ShoppingCart className='size-4 sm:size-6' />
+            </div> 
           </div>
 
           {/* شارات الضمان والخدمة */}
@@ -636,8 +628,6 @@ export default function ShowProduct({ product: initialProduct }) {
           </div>
         </div>
       </div>
-
-
     </div>
   );
 }

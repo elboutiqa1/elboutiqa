@@ -22,7 +22,7 @@ import 'swiper/css/effect-coverflow';
 
 import Img1 from '@/app/assets/pictures/6in1.png'
 import Img2 from '@/app/assets/pictures/11in1.png'
-import Product from "@/app/product/page";
+
 
 const SLIDES = [
   {

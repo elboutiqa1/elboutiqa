@@ -1,10 +1,6 @@
 import "./globals.css";
 import localFont from 'next/font/local';
-import NavBar from "./components/ui/NavBar";
-import { Toaster } from "@/components/ui/sonner"
 import { ShopProvider } from "@/Context/ShopContext";
-import Footer from "./components/ui/footer"
-import MetaPixel from "./components/ui/MetaPixel"
 
 const cairo = localFont({
   src: './assets/fonts/Cairo-VariableFont_slnt,wght.ttf',
@@ -93,15 +89,10 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full font-cairo">
         <ShopProvider>
-          <MetaPixel />
-          <NavBar />
-          <main id="main-content">
-            {children}
-          </main>
-          <Footer />
-          <Toaster />
+          {children}
         </ShopProvider>
       </body>
     </html>
   );
 }
+

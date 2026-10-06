@@ -1,5 +1,5 @@
 
-import ProductsSection from "../components/ProductsSection";
+import ProductsSection from "@/app/components/ProductsSection";
 import {MoveLeft} from "lucide-react"
 
 

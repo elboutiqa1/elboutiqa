@@ -1,15 +1,21 @@
-import { productsItems } from "@/lib/products";
+import { getProducts } from "@/lib/products";
 
-export default function sitemap() {
+export default async function sitemap() {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://elboutiqa.com";
 
-  // Product pages
-  const productUrls = (productsItems || []).map((product) => ({
-    url: `${baseUrl}/product/${product.id}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly",
-    priority: 0.8,
-  }));
+  // Product pages from DB
+  let productUrls = [];
+  try {
+    const products = await getProducts();
+    productUrls = products.map((product) => ({
+      url: `${baseUrl}/product/${product.slug || product._id}`,
+      lastModified: product.updatedAt ? new Date(product.updatedAt) : new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    }));
+  } catch (e) {
+    console.error("Sitemap: failed to fetch products", e);
+  }
 
   // Categories
   const categories = ["Hub", "Refroidisseur", "Electronique", "Accessoires"];
