@@ -61,6 +61,7 @@ export async function getProductById(id) {
 
 /**
  * جلب منتج واحد بالـ slug (مع دعم الحروف العربية والـ fallback)
+ * إذا وُجد المنتج عبر slug قديم، يُعاد مع `_redirectSlug` للتحويل
  * @param {string} slug
  */
 export async function getProductBySlug(slug) {
@@ -76,13 +77,15 @@ export async function getProductBySlug(slug) {
       // keep rawSlug
     }
 
+    const slugVariants = [
+      rawSlug,
+      decodedSlug,
+      rawSlug.toLowerCase(),
+      decodedSlug.toLowerCase(),
+    ];
+
     let product = await Product.findOne({
-      $or: [
-        { slug: rawSlug },
-        { slug: decodedSlug },
-        { slug: rawSlug.toLowerCase() },
-        { slug: decodedSlug.toLowerCase() },
-      ],
+      $or: slugVariants.map((s) => ({ slug: s })),
     })
       .populate("category", "name slug")
       .lean();
@@ -92,6 +95,20 @@ export async function getProductBySlug(slug) {
       product = await Product.findById(rawSlug)
         .populate("category", "name slug")
         .lean();
+    }
+
+    // Fallback: البحث في الـ slugs القديمة (previousSlugs)
+    if (!product) {
+      product = await Product.findOne({
+        previousSlugs: { $in: slugVariants },
+      })
+        .populate("category", "name slug")
+        .lean();
+
+      // وُجد عبر slug قديم → نضيف علامة للتحويل
+      if (product) {
+        return { ...serialize(product), _redirectSlug: product.slug };
+      }
     }
 
     return product ? serialize(product) : null;

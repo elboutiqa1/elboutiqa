@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import connectDB from "@/lib/mongodb";
 import Product from "@/models/Product";
 import cloudinary from "@/lib/cloudinary";
@@ -73,11 +74,22 @@ export async function PUT(request, { params }) {
       updateData.slug = slug.trim();
     }
 
+    // جلب الـ slug القديم قبل التحديث لعمل revalidate
+    const oldProduct = await Product.findById(id).select("slug").lean();
+    const oldSlug = oldProduct?.slug;
+
     const updated = await Product.findByIdAndUpdate(
       id,
       updateData,
       { new: true, runValidators: true }
     ).populate("category", "name slug");
+
+    // تحديث الكاش لصفحات المنتج والصفحة الرئيسية
+    revalidatePath(`/product/${encodeURIComponent(updated.slug)}`);
+    if (oldSlug && oldSlug !== updated.slug) {
+      revalidatePath(`/product/${encodeURIComponent(oldSlug)}`);
+    }
+    revalidatePath("/");
 
     return NextResponse.json({ success: true, product: updated });
   } catch (error) {
@@ -103,6 +115,10 @@ export async function DELETE(request, { params }) {
         { status: 404 }
       );
     }
+
+    // تحديث الكاش بعد الحذف
+    revalidatePath(`/product/${encodeURIComponent(product.slug)}`);
+    revalidatePath("/");
 
     return NextResponse.json({ success: true, message: "Product deleted" });
   } catch (error) {

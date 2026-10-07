@@ -1,6 +1,18 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect } from "react";
 
 export default function NotFound() {
+  useEffect(() => {
+    const key = `notfound_refreshed_${window.location.pathname}`;
+
+    if (!sessionStorage.getItem(key)) {
+      sessionStorage.setItem(key, "1");
+      window.location.reload();
+    }
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
       <h1 className="text-6xl font-bold">404</h1>

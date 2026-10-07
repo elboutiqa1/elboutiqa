@@ -63,6 +63,9 @@ const productSchema = new mongoose.Schema(
     isFeatured: { type: Boolean, default: false },
 
     isActive: { type: Boolean, default: true },
+
+    // الـ slugs القديمة للمنتج – تُستخدم لعمل redirect من الروابط القديمة
+    previousSlugs: { type: [String], default: [], index: true },
   },
   { timestamps: true }
 );
@@ -108,12 +111,15 @@ productSchema.pre("findOneAndUpdate", async function () {
   }
 
   const ProductModel = mongoose.models.Product;
+  const docId = this.getQuery()._id;
+
+  // جلب الـ slug الحالي قبل التعديل لحفظه في previousSlugs
+  const currentDoc = await ProductModel?.findById(docId).select("slug").lean();
+  const oldSlug = currentDoc?.slug;
 
   let baseSlug = generateSlug(providedSlug || name);
   let slug = baseSlug;
   let counter = 1;
-
-  const docId = this.getQuery()._id;
 
   while (
     await ProductModel?.findOne({
@@ -124,10 +130,22 @@ productSchema.pre("findOneAndUpdate", async function () {
     slug = `${baseSlug}-${counter++}`;
   }
 
-  if (update?.$set) {
-    update.$set.slug = slug;
+  // إذا تغيّر الـ slug فعلاً، نحفظ القديم في previousSlugs
+  if (oldSlug && oldSlug !== slug) {
+    if (update?.$set) {
+      update.$set.slug = slug;
+    } else {
+      update.slug = slug;
+    }
+    // نستخدم $addToSet لتفادي التكرار
+    update.$addToSet = update.$addToSet || {};
+    update.$addToSet.previousSlugs = oldSlug;
   } else {
-    update.slug = slug;
+    if (update?.$set) {
+      update.$set.slug = slug;
+    } else {
+      update.slug = slug;
+    }
   }
 
   this.setUpdate(update);
