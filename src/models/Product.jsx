@@ -152,6 +152,7 @@ productSchema.pre("findOneAndUpdate", async function () {
 });
 
 const Product =
-  mongoose.models.Product || mongoose.model("Product", productSchema);
+  mongoose.models.Product ||
+  mongoose.model("Product", productSchema);
 
 export default Product;

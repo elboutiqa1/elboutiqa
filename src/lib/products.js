@@ -1,5 +1,6 @@
 import connectDB from "@/lib/mongodb";
 import Product from "@/models/Product";
+import Category from "@/models/Category";
 
 /**
  * جلب جميع المنتجات من قاعدة البيانات
@@ -20,8 +21,6 @@ export async function getProducts({ category, search, limit } = {}) {
   }
 
   if (category?.trim()) {
-    const Category = (await import("@/models/Category")).default;
-
     const categoryValue = category.trim();
 
     const orConditions = [
@@ -97,12 +96,9 @@ export async function getProductById(id) {
  * يدعم:
  * - slug الحالي
  * - slug بعد decodeURIComponent
- * - البحث غير الحساس لحالة الأحرف
+ * - lowercase
  * - MongoDB ObjectId كـ fallback
  * - previousSlugs للروابط القديمة
- *
- * إذا وُجد المنتج عبر previousSlugs:
- * يعاد معه _redirectSlug لإعادة التوجيه للرابط الجديد.
  *
  * @param {string} slug
  */
@@ -124,13 +120,15 @@ export async function getProductBySlug(slug) {
       // نستخدم rawSlug إذا كان الترميز غير صالح
     }
 
-    // إزالة التكرار
     const slugVariants = [
       rawSlug,
       decodedSlug,
       rawSlug.toLowerCase(),
       decodedSlug.toLowerCase(),
-    ].filter((value, index, array) => value && array.indexOf(value) === index);
+    ].filter(
+      (value, index, array) =>
+        value && array.indexOf(value) === index
+    );
 
     // 1. البحث بالـ slug الحالي
     let product = await Product.findOne({
@@ -158,6 +156,7 @@ export async function getProductBySlug(slug) {
         .populate("category", "name slug")
         .lean();
 
+      // وُجد عبر slug قديم → إعادة التوجيه للرابط الجديد
       if (product) {
         return {
           ...serialize(product),
@@ -176,8 +175,7 @@ export async function getProductBySlug(slug) {
       stack: error?.stack,
     });
 
-    // مهم جدًا:
-    // لا نحول خطأ قاعدة البيانات إلى 404
+    // مهم: لا نحول خطأ قاعدة البيانات إلى 404
     throw error;
   }
 }
@@ -232,3 +230,4 @@ function serialize(product) {
       : undefined,
   };
 }
+
