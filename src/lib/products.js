@@ -8,20 +8,46 @@ import Product from "@/models/Product";
 export async function getProducts({ category, search, limit } = {}) {
   await connectDB();
 
-  const filter = { isActive: { $ne: false } };
+  const filter = {
+    isActive: { $ne: false },
+  };
 
   if (search?.trim()) {
-    filter.name = { $regex: search.trim(), $options: "i" };
+    filter.name = {
+      $regex: search.trim(),
+      $options: "i",
+    };
   }
 
   if (category?.trim()) {
     const Category = (await import("@/models/Category")).default;
+
+    const categoryValue = category.trim();
+
+    const orConditions = [
+      {
+        name: {
+          $regex: categoryValue,
+          $options: "i",
+        },
+      },
+      {
+        slug: {
+          $regex: categoryValue,
+          $options: "i",
+        },
+      },
+    ];
+
+    // البحث بالـ ObjectId فقط إذا كان صالحًا
+    if (/^[0-9a-fA-F]{24}$/.test(categoryValue)) {
+      orConditions.push({
+        _id: categoryValue,
+      });
+    }
+
     const cat = await Category.findOne({
-      $or: [
-        { name: { $regex: category.trim(), $options: "i" } },
-        { slug: { $regex: category.trim(), $options: "i" } },
-        { _id: category.trim().match(/^[0-9a-fA-F]{24}$/) ? category.trim() : null },
-      ],
+      $or: orConditions,
     }).lean();
 
     if (cat) {
@@ -33,7 +59,9 @@ export async function getProducts({ category, search, limit } = {}) {
     .populate("category", "name slug")
     .sort({ createdAt: -1 });
 
-  if (limit) query = query.limit(limit);
+  if (limit) {
+    query = query.limit(limit);
+  }
 
   const products = await query.lean();
 
@@ -46,7 +74,10 @@ export async function getProducts({ category, search, limit } = {}) {
  */
 export async function getProductById(id) {
   await connectDB();
-  if (!id) return null;
+
+  if (!id) {
+    return null;
+  }
 
   try {
     const product = await Product.findById(id)
@@ -54,76 +85,114 @@ export async function getProductById(id) {
       .lean();
 
     return product ? serialize(product) : null;
-  } catch {
-    return null;
+  } catch (error) {
+    console.error("GET PRODUCT BY ID ERROR:", error);
+    throw error;
   }
 }
 
 /**
- * جلب منتج واحد بالـ slug (مع دعم الحروف العربية والـ fallback)
- * إذا وُجد المنتج عبر slug قديم، يُعاد مع `_redirectSlug` للتحويل
+ * جلب منتج واحد بالـ slug
+ *
+ * يدعم:
+ * - slug الحالي
+ * - slug بعد decodeURIComponent
+ * - البحث غير الحساس لحالة الأحرف
+ * - MongoDB ObjectId كـ fallback
+ * - previousSlugs للروابط القديمة
+ *
+ * إذا وُجد المنتج عبر previousSlugs:
+ * يعاد معه _redirectSlug لإعادة التوجيه للرابط الجديد.
+ *
  * @param {string} slug
  */
 export async function getProductBySlug(slug) {
   await connectDB();
-  if (!slug) return null;
+
+  if (!slug) {
+    return null;
+  }
 
   try {
     const rawSlug = String(slug).trim();
+
     let decodedSlug = rawSlug;
+
     try {
       decodedSlug = decodeURIComponent(rawSlug);
     } catch {
-      // keep rawSlug
+      // نستخدم rawSlug إذا كان الترميز غير صالح
     }
 
+    // إزالة التكرار
     const slugVariants = [
       rawSlug,
       decodedSlug,
       rawSlug.toLowerCase(),
       decodedSlug.toLowerCase(),
-    ];
+    ].filter((value, index, array) => value && array.indexOf(value) === index);
 
+    // 1. البحث بالـ slug الحالي
     let product = await Product.findOne({
-      $or: slugVariants.map((s) => ({ slug: s })),
+      $or: slugVariants.map((value) => ({
+        slug: value,
+      })),
     })
       .populate("category", "name slug")
       .lean();
 
-    // Fallback: إذا لم نجد بالـ slug وكان المعرف ObjectId صالحاً (24 hex characters)
-    if (!product && rawSlug.match(/^[0-9a-fA-F]{24}$/)) {
+    // 2. fallback: إذا كان الـ slug نفسه MongoDB ObjectId
+    if (!product && /^[0-9a-fA-F]{24}$/.test(rawSlug)) {
       product = await Product.findById(rawSlug)
         .populate("category", "name slug")
         .lean();
     }
 
-    // Fallback: البحث في الـ slugs القديمة (previousSlugs)
+    // 3. البحث في الـ slugs القديمة
     if (!product) {
       product = await Product.findOne({
-        previousSlugs: { $in: slugVariants },
+        previousSlugs: {
+          $in: slugVariants,
+        },
       })
         .populate("category", "name slug")
         .lean();
 
-      // وُجد عبر slug قديم → نضيف علامة للتحويل
       if (product) {
-        return { ...serialize(product), _redirectSlug: product.slug };
+        return {
+          ...serialize(product),
+          _redirectSlug: product.slug,
+        };
       }
     }
 
+    // المنتج غير موجود فعلًا
     return product ? serialize(product) : null;
-  } catch {
-    return null;
+  } catch (error) {
+    console.error("GET PRODUCT BY SLUG ERROR:", {
+      slug,
+      message: error?.message,
+      name: error?.name,
+      stack: error?.stack,
+    });
+
+    // مهم جدًا:
+    // لا نحول خطأ قاعدة البيانات إلى 404
+    throw error;
   }
 }
 
 /**
- * جلب المنتجات المميزة (isFeatured)
+ * جلب المنتجات المميزة
  * @param {number} limit
  */
 export async function getFeaturedProducts(limit = 8) {
   await connectDB();
-  const products = await Product.find({ isFeatured: true, isActive: { $ne: false } })
+
+  const products = await Product.find({
+    isFeatured: true,
+    isActive: { $ne: false },
+  })
     .populate("category", "name slug")
     .sort({ createdAt: -1 })
     .limit(limit)
@@ -132,20 +201,34 @@ export async function getFeaturedProducts(limit = 8) {
   return products.map(serialize);
 }
 
-/* ── helper: يحول كل ObjectId و Date إلى string ── */
+/**
+ * تحويل ObjectId و Date إلى string
+ */
 function serialize(product) {
   return {
     ...product,
+
     _id: String(product._id),
-    id: String(product._id),        // alias للتوافق مع الكود القديم
-    slug: product.slug || String(product._id), // fallback للمنتجات القديمة بدون slug
+
+    // للتوافق مع الكود القديم
+    id: String(product._id),
+
+    // fallback للمنتجات القديمة التي لا تحتوي على slug
+    slug: product.slug || String(product._id),
+
     category: product.category
       ? {
           ...product.category,
           _id: String(product.category._id),
         }
       : product.category,
-    createdAt: product.createdAt ? String(product.createdAt) : undefined,
-    updatedAt: product.updatedAt ? String(product.updatedAt) : undefined,
+
+    createdAt: product.createdAt
+      ? String(product.createdAt)
+      : undefined,
+
+    updatedAt: product.updatedAt
+      ? String(product.updatedAt)
+      : undefined,
   };
 }
