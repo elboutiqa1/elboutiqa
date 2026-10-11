@@ -37,7 +37,7 @@ export default function DashboardPage() {
 
   // État du calculateur interactif FormeSection
   const [calcQuantity, setCalcQuantity] = useState(1);
-  const [calcPrice, setCalcPrice] = useState(2500);
+  const [calcPrice, setCalcPrice] = useState(0);
   const [calcWilayaCode, setCalcWilayaCode] = useState("16"); // Alger par défaut
   const [calcDeliveryType, setCalcDeliveryType] = useState("home"); // 'home' ou 'desk'
   const [isSimulating, setIsSimulating] = useState(false);
@@ -47,7 +47,7 @@ export default function DashboardPage() {
   // État du modal d'ajustement / déduction personnalisée
   const [isAdjustModalOpen, setIsAdjustModalOpen] = useState(false);
   const [adjustOrderCount, setAdjustOrderCount] = useState(1);
-  const [adjustAmount, setAdjustAmount] = useState(2500);
+  const [adjustAmount, setAdjustAmount] = useState(0);
   const [isAdjusting, setIsAdjusting] = useState(false);
 
   // Chargement initial des statistiques
