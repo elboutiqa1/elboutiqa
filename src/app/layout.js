@@ -29,7 +29,7 @@ const inter = localFont({
 
 
 export const metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://elboutiqa.com"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://el-boutiqa.com"),
   title: {
     default: "البوتيكة | Elboutiqa - متجرك الإلكتروني في الجزائر",
     template: "%s | البوتيكة",

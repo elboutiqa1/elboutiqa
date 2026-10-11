@@ -145,7 +145,21 @@ export default function ShowProduct({ product }) {
         </span>
       </nav>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 mt-10 gap-8 lg:gap-12 items-start">
+
+
+       {/* قسم استمارة الطلب (FormeSection) مباشرة أسفل المنتج */}
+     { product.inStock && <FormeSection 
+        product={currentProduct} 
+        quantity={quantity} 
+        onQuantityChange={setQuantity}
+        selectedOption={selectedOption}
+        onOptionChange={setSelectedOption}
+      />
+       }
+
+
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 mt-5 gap-8 lg:gap-12 items-start">
         {/* gallery section */}
         <div className="lg:col-span-6 flex flex-col gap-4">
           {/* main image */}
@@ -384,179 +398,6 @@ export default function ShowProduct({ product }) {
           </div>
 
           {/* وصف مختصر للمنتج */}
-          <div className="hidden sm:block text-sm sm:text-base text-text-muted leading-relaxed font-cairo">
-            <p>{product?.description}</p>
-          </div>
-
-          {/* المميزات السريعة */}
-          {product?.features && product.features.length > 0 && (
-            <div className="space-y-2 py-2 hidden sm:block">
-              <h4 className="text-sm font-bold font-alexandria text-primary">
-                أبرز المميزات:
-              </h4>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm sm:text-md text-text">
-                {product.features.map((feat, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <span className="w-5 h-5 rounded-full bg-whatsapp text-primary flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-primary stroke-[3]" />
-                    </span>
-                    <span>{feat}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* أزرار الشراء والإضافة للسلة */}
-          <div className="hidden sm:flex flex-row items-stretch gap-2 sm:gap-3 pt-2">
-            {/* زر الطلب المباشر - ينزل مباشرة للفورم */}
-            <button
-              type="button"
-              onClick={scrollToOrderForm}
-              className="flex-1 h-13 sm:h-14 rounded-xl bg-primary text-background hover:bg-primary-hover active:scale-[0.99] font-alexandria font-bold text-base sm:text-lg transition-all duration-200 shadow-lg shadow-primary/25 sm:flex hidden items-center justify-center gap-2 cursor-pointer"
-            >
-              {product.inStock ? <span>اطلب الآن</span> : <span>تواصل معنا لطلب خاص</span>}
-              <ArrowDown className="w-5 h-5" />
-            </button>
-
-            {/* زر الإضافة إلى السلة */}
-            <div className={`h-14 w-14 flex items-center justify-center rounded-full 
-              transition-all duration-200 cursor-pointer
-              ${isInCart ? "bg-background text-primary hover:text-primary-hover hover:bg-background" : "bg-primary text-background hover:bg-primary-hover active:bg-primary-hover active:text-background"}`}
-              onClick={() => {
-                if (!isInCart) {
-                  addToCart(currentProduct); 
-                  toast.success("تمت إضافة المنتج إلى السلة");
-                } else {
-                  removeFromCart(currentProduct); 
-                  toast.error("تمت إزالة المنتج من السلة");
-                }
-              }}
-            >
-              <ShoppingCart className='size-4 sm:size-6' />
-            </div> 
-          </div>
-
-          {/* شارات الضمان والخدمة */}
-          <div className="hidden sm:flex justify-center items-center w-full gap-3 pt-4 border-t border-border">
-            <div className="flex flex-col items-center text-center p-3 rounded-xl bg-background border border-border/50">
-              <Truck className="w-5 h-5 text-primary mb-1" />
-              <span className="text-xs font-bold text-primary">توصيل سريع</span>
-              <span className="text-[10px] text-text-muted">لكل الولايات</span>
-            </div>
-
-            <div className="flex flex-col items-center text-center p-3 rounded-xl bg-background border border-border/50">
-              <ShieldCheck className="w-5 h-5 text-primary mb-1" />
-              <span className="text-xs font-bold text-primary">دفع عند الاستلام</span>
-              <span className="text-[10px] text-text-muted">بعد المعاينة</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* قسم استمارة الطلب (FormeSection) مباشرة أسفل المنتج */}
-     { product.inStock && <FormeSection 
-        product={currentProduct} 
-        quantity={quantity} 
-        onQuantityChange={setQuantity}
-        selectedOption={selectedOption}
-        onOptionChange={setSelectedOption}
-      />
-       }
-
-      {/* main section of product (Mobile) */}
-      <div className="block sm:hidden grid grid-cols-1 lg:grid-cols-12 mt-10 gap-8 lg:gap-12 items-start">
-        <div className="lg:col-span-6 flex flex-col gap-7">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-xs font-bold text-whatsapp">
-              {product.inStock ? <span className="flex items-center gap-1">
-                <PackageCheck className="w-4 h-4 text-whatsapp" />
-                متوفر في المخزون
-              </span> : <span className="flex items-center gap-1 text-red">
-                <PackageX className="w-4 h-4 text-red" />
-                غير متوفر في المخزون
-              </span>}
-            </div>
-          </div>
-
-          {/* عنوان المنتج */}
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold font-alexandria text-primary leading-tight">
-            {product?.name}
-          </h1>
-
-          {/* قسم الأسعار */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-background border border-border/70 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-baseline gap-3">
-              <span className="text-3xl sm:text-4xl font-extrabold font-alexandria text-primary">
-                {currentPrice} دج
-              </span>
-              {currentOldPrice !== 0 && currentOldPrice > currentPrice && (
-                <span className="text-lg sm:text-xl text-text-muted line-through">
-                  {currentOldPrice} دج
-                </span>
-              )}
-            </div>
-
-            {discountPercent > 0 && (
-              <span className="px-3 py-1.5 rounded-xl bg-red/10 text-red font-bold text-sm border border-red/20">
-                وفرت {currentOldPrice - currentPrice} دج
-              </span>
-            )}
-          </div>
-
-          {/* قسم اختيار الخيارات / المقاسات (Mobile) */}
-          {productOptions.length > 0 && (
-            <div className="space-y-3 p-4 rounded-2xl bg-background border border-border/80">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-sm font-bold font-alexandria text-primary flex items-center gap-2">
-                  <SlidersHorizontal className="w-4 h-4 text-primary" />
-                  <span>الخيارات المتاحة / المقاس:</span>
-                </span>
-                {selectedOption && (
-                  <span className="text-xs font-semibold font-alexandria text-primary bg-primary/10 px-2.5 py-1 rounded-lg border border-primary/20 truncate max-w-[170px]">
-                    المحدد: {selectedOption}
-                  </span>
-                )}
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                {productOptions.map((opt, idx) => {
-                  const optName = typeof opt === "object" ? (opt.name || opt.label) : String(opt);
-                  const optPrice = typeof opt === "object" ? opt.price : null;
-                  const isSelected = selectedOption === optName;
-
-                  return (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() => setSelectedOption(optName)}
-                      className={`relative flex items-center gap-2 px-3 py-2 rounded-xl border-2 transition-all duration-200 cursor-pointer text-xs font-alexandria font-semibold select-none ${
-                        isSelected
-                          ? "border-primary bg-primary text-background shadow-md shadow-primary/20 scale-[1.02]"
-                          : "border-border bg-background text-text hover:border-primary/50"
-                      }`}
-                    >
-                      <div className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center transition-all ${
-                        isSelected ? "border-background bg-background text-primary" : "border-border"
-                      }`}>
-                        {isSelected && <Check className="w-2.5 h-2.5 stroke-[3] text-primary" />}
-                      </div>
-                      <span>{optName}</span>
-                      {optPrice && (
-                        <span className={`text-[10px] px-1 py-0.5 rounded font-bold ${
-                          isSelected ? "bg-background/20 text-background" : "bg-primary/10 text-primary"
-                        }`}>
-                          {optPrice} دج
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* وصف مختصر للمنتج */}
           <div className="text-sm sm:text-base text-text-muted leading-relaxed font-cairo">
             <p>{product?.description}</p>
           </div>
@@ -582,15 +423,13 @@ export default function ShowProduct({ product }) {
 
           {/* أزرار الشراء والإضافة للسلة */}
           <div className="flex flex-row items-stretch gap-2 sm:gap-3 pt-2">
-            {/* زر الطلب المباشر */}
-          
+            {/* زر الطلب المباشر - ينزل مباشرة للفورم */}
             <button
               type="button"
               onClick={scrollToOrderForm}
               className="flex-1 h-13 sm:h-14 rounded-xl bg-primary text-background hover:bg-primary-hover active:scale-[0.99] font-alexandria font-bold text-base sm:text-lg transition-all duration-200 shadow-lg shadow-primary/25 flex items-center justify-center gap-2 cursor-pointer"
             >
               {product.inStock ? <span>اطلب الآن</span> : <span>تواصل معنا لطلب خاص</span>}
-
               <ArrowUp className="w-5 h-5" />
             </button>
 
@@ -613,7 +452,7 @@ export default function ShowProduct({ product }) {
           </div>
 
           {/* شارات الضمان والخدمة */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-border">
+          <div className="flex justify-center items-center w-full gap-3 pt-4 border-t border-border">
             <div className="flex flex-col items-center text-center p-3 rounded-xl bg-background border border-border/50">
               <Truck className="w-5 h-5 text-primary mb-1" />
               <span className="text-xs font-bold text-primary">توصيل سريع</span>
@@ -628,6 +467,12 @@ export default function ShowProduct({ product }) {
           </div>
         </div>
       </div>
+
+     
+
+
+
+
     </div>
   );
 }

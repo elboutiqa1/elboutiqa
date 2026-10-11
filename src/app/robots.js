@@ -1,11 +1,11 @@
 export default function robots() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://elboutiqa.com";
+  const baseUrl = "https://el-boutiqa.com";
 
   return {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/api/", "/checkout"],
+      disallow: ["/api/", "/checkout", "/dashboard/", "/login"],
     },
     sitemap: `${baseUrl}/sitemap.xml`,
   };
