@@ -76,8 +76,15 @@ body{
     background: var(--color-background) !important;
 }
 
-
-
+.cn-toast {
+  border-radius: 16px !important;
+  padding: 14px 18px !important;
+  color: var(--color-background) !important;
+  font-family: var(--font-cairo), sans-serif !important;
+  width: fit-content !important;
+  font-weight: bold !important;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12) !important;
+}
 
 html {
   scroll-behavior: smooth;
