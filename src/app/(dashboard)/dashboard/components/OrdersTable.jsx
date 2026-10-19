@@ -7,14 +7,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+
 } from "@/components/ui/table"
 
-import {Copy , RotateCcwClock , Printer ,RefreshCcw } from 'lucide-react'
+import {Copy , RotateCcwClock  } from 'lucide-react'
 import {toast} from "sonner"
-import CustomSelect from "./CustomSelect"
+
 import ImpressionType from "./ImpressionType"
 
-import {useEffect ,useState} from 'react'
+import { useState} from 'react'
 
 const tableHeadItems = [
   "Tracking",
@@ -145,7 +146,7 @@ case 8:
 
 
 
-export function OrdersTable({orders,reload,setReload,limit,setLimit}) {
+export function OrdersTable({orders}) {
   const [printingTracking, setPrintingTracking] = useState(null);
 
 
@@ -195,17 +196,8 @@ export function OrdersTable({orders,reload,setReload,limit,setLimit}) {
 
 
   return (
-    <div className="w-full h-full relative overflow-x-scroll">
-
-      <div className="flex justify-center items-center w-fit absolute top-2 left-0 gap-2 text-text-muted ">
-            <p className="text-text-muted text-sm font-bold  bg-border/30 border-1 border-border px-3 py-1.5 rounded-lg">Colis Actuels : <span className="ml-2">{orders.length}</span></p>
-        <RefreshCcw onClick={() => setReload(!reload)} strokeWidth={1.75} className="border-border border-1 px-3 py-1.5 rounded-lg bg-border/30 h-full w-12 cursor-pointer hover:bg-border transition-all duration-200 z-40  " />
-        <CustomSelect   label={"Afficher"} options={[10,20,50,100]} value={limit} onChange={setLimit} />
-      </div>
-
-     
-
-    <Table className=" bg-background  border-1 border-border mt-13">
+    <div className="w-full h-full ">
+    <Table className=" bg-background  border-1 border-border mt-3 ">
         {/*count of colis*/}
 
       <TableHeader className="w-full bg-border/30 ">
@@ -249,10 +241,10 @@ export function OrdersTable({orders,reload,setReload,limit,setLimit}) {
 
 
               </TableCell>
-            <TableCell className="max-w-[200px]  w-fit overflow-x-scroll  " ><span className="rounded-lg  bg-primary py-1 px-2 text-background text-xs mr-1 ">x{item.quantite}</span> <span className="text-md  font-cairo ">{item.article}</span></TableCell>
+            <TableCell className="max-w-[200px]  w-fit overflow-x-auto  " ><span className="rounded-lg  bg-primary py-1 px-2 text-background text-xs mr-1 ">x{item.quantite}</span> <span className="text-md  font-cairo ">{item.article}</span></TableCell>
 
 
-            <TableCell className=" max-w-[100px] text-center text-text-muted overflow-x-scroll">{item.note_fournisseur ===null ?"-":
+            <TableCell className=" max-w-[100px] text-center text-text-muted overflow-x-auto">{item.note_fournisseur ===null ?"-":
                <span  className="text-sm font-cairo  ">{item.note_fournisseur}</span>
             }
             </TableCell>

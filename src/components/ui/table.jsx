@@ -10,11 +10,11 @@ function Table({
   return (
     <div
       data-slot="table-container"
-      className="relative   rounded-lg  "
+      className="relative   overflow-x-auto  "
     >
       <table
         data-slot="table"
-        className={cn("w-full caption-bottom text-sm rounded-lg border-2 border-border   ", className)}
+        className={cn("w-full caption-bottom text-sm  border-2 border-border    ", className)}
         {...props}
       />
     </div>
@@ -28,7 +28,7 @@ function TableHeader({
   return (
     <thead
       data-slot="table-header"
-      className={cn("[&_tr]:border-b ", className)}
+      className={cn("[&_tr]:border-b", className)}
       {...props}
     />
   )
