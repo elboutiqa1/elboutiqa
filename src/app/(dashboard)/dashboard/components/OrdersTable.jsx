@@ -211,7 +211,7 @@ export function OrdersTable({orders}) {
       </TableHeader>
       <TableBody>
         {orders.map((item) => (
-          <TableRow className="hover:bg-border/30"  key={item.tracking}>
+          <TableRow className="hover:bg-border/30 "  key={item.tracking} >
 
             
            <TableCell onClick={() => navigator.clipboard.writeText(item.tracking).then(() => toast.success("Order tracking copied successfully"))} className="flex flex-col items-center justify-center" >
@@ -241,7 +241,7 @@ export function OrdersTable({orders}) {
 
 
               </TableCell>
-            <TableCell className="max-w-[200px]  w-fit overflow-x-auto  " ><span className="rounded-lg  bg-primary py-1 px-2 text-background text-xs mr-1 ">x{item.quantite}</span> <span className="text-md  font-cairo ">{item.article}</span></TableCell>
+            <TableCell className="max-w-[170px]  w-fit overflow-x-auto  " ><span className="rounded-lg  bg-primary py-1 px-2 text-background text-xs mr-1 ">x{item.quantite}</span> <span className="text-sm  font-cairo ">{item.article}</span></TableCell>
 
 
             <TableCell className=" max-w-[100px] text-center text-text-muted overflow-x-auto">{item.note_fournisseur ===null ?"-":
@@ -252,8 +252,8 @@ export function OrdersTable({orders}) {
             <TableCell className="text-center font-cairo text-text font-semibold text-md "><span className="">{item.total}</span></TableCell>
 
 
-            <TableCell>
-              <div className="flex items-center justify-start gap-3 w-full h-full " >
+            <TableCell >
+              <div className="flex items-center justify-start gap-3 w-full h-full sm:mr-8" >
               <RotateCcwClock strokeWidth={1.5} className="p-1 size-8 text-text-muted hover:text-text transition-all duration-200 border-1 rounded-lg border-border cursor-pointer" />
                <ImpressionType tracking={item.tracking} handlePrint={handlePrint} />
               </div>
